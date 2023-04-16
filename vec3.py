@@ -49,22 +49,22 @@ Color = Vec3
 
 # Utility Functions
 def vecToString(v: Vec3):
-    return "".join(v.e)
+    return f"{v.e[0]} {v.e[1]} {v.e[2]}"
 
 def vecAdd(u: Vec3, v: Vec3):
-    return u.__iadd__(v)
+    return Vec3(u.e[0] + v.e[0], u.e[1] + v.e[1], u.e[2] + v.e[2])
 
 def vecSub(u: Vec3, v: Vec3):
-    return u.__iadd__(v.__neg__)
+    return Vec3(u.e[0] - v.e[0], u.e[1] - v.e[1], u.e[2] - v.e[2])
 
 def vecMul(u: Vec3, v: Vec3):
     return Vec3(u.e[0] * v.e[0], u.e[1] * v.e[1], u.e[2] * v.e[2])
 
 def vecScalarMul(v: Vec3, t):
-    return v.__imul__(t)
+    return Vec3(v.e[0] * t, v.e[1] * t, v.e[2] * t)
 
 def vecScalarDiv(v: Vec3, t):
-    return v.__imul__(1/t)
+    return vecScalarMul(v, 1/t)
 
 def dot(u: Vec3, v: Vec3):
     return u.e[0] * v.e[0] + u.e[1] * v.e[1] + u.e[2] * v.e[2]
