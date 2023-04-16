@@ -2,6 +2,11 @@ import sys
 from vec3 import *
 from color import *
 from ray import *
+try:
+    from tqdm import tqdm
+except ModuleNotFoundError:
+    print("This script requires tqdm to be installed.\n Install it using 'pip install tqdm'.")
+    exit(-1)
 
 # returns a lerp between light blue and white as a background
 def rayColor(r: Ray) -> Color:
@@ -10,7 +15,7 @@ def rayColor(r: Ray) -> Color:
     # return (1 - t) * Color(1, 1, 1) + t * Color(0.5, 0.7, 1.0)
     return vecAdd(
             vecScalarMul(Color(1, 1, 1), (1 - t)), 
-            vecScalarMul(Color(.5, .7, 1), t)
+            vecScalarMul(Color(.839, .655, .98), t)
         )
 
 # Image
@@ -43,15 +48,14 @@ with open("image.ppm", "w") as f:
     output = ""
     output += f"P3\n{IMAGE_WIDTH} {IMAGE_HEIGHT}\n255\n" # header
 
+    # progress bar
+    progress = tqdm(range(IMAGE_HEIGHT), "Generating Lines", unit=" lines")
+
     # values are written from top left to bottom right
-    for j in range(IMAGE_HEIGHT-1, -1, -1):
-        # progress
-        sys.stderr.write("\rScanlines remaining: {} ".format(j))
-        sys.stderr.flush()
-        
+    for j in range(IMAGE_HEIGHT-1, -1, -1):        
         for i in range(IMAGE_WIDTH):
-            u = i / (IMAGE_WIDTH -1)
-            v = j / (IMAGE_HEIGHT -1)
+            u = i / (IMAGE_WIDTH - 1)
+            v = j / (IMAGE_HEIGHT - 1)
 
             # r = Ray(origin, lower_left_corner + u*horizontal + v*vertical - origin)
             r = Ray(origin, vecAdd(
@@ -61,6 +65,6 @@ with open("image.ppm", "w") as f:
             pixelColor = rayColor(r)
             # create color vector
             output += writeColor(pixelColor)
-    
+        progress.update(IMAGE_WIDTH - i)
     f.write(output)
     
