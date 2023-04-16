@@ -1,4 +1,6 @@
 import sys
+from vec3 import *
+from color import *
 
 # image size
 IMAGE_WIDTH = 256
@@ -16,14 +18,9 @@ with open("image.ppm", "w") as f:
         sys.stderr.flush()
         
         for i in range(IMAGE_WIDTH):
-            r = i / (IMAGE_HEIGHT - 1)
-            g = j / (IMAGE_HEIGHT - 1)
-            b = .25
-
-            ir = int(255.999 * r)
-            ig = int(255.999 * g)
-            ib = int(255.999 * b)
-
-            output += f"{ir} {ig} {ib}\n"
+            # create color vector
+            pixelColor = Color(i / (IMAGE_HEIGHT - 1), j / (IMAGE_HEIGHT - 1), .25)
+            output += writeColor(pixelColor)
     
     f.write(output)
+    
