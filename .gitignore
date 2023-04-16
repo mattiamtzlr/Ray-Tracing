@@ -1,2 +1,4 @@
 **.ppm
 **.code-workspace
+__pycache__
+test.**
