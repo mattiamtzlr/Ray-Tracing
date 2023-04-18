@@ -10,17 +10,18 @@ except ModuleNotFoundError:
 
 # method to test wether a ray intersects a spehere using a quadratic equation
 def hitSphere(center: Point3, radius, r: Ray) -> float:
+    # substituting b with 2h
     oc = vecSub(r.origin(), center)
-    a = dot(r.direction(), r.direction())
-    b = 2 * dot(oc, r.direction())
-    c = dot(oc, oc) - radius**2
-    discriminant = b**2 - 4*a*c # value under sqrt, if > 0 => ray intersects sphere
+    a = r.direction().length_squared()
+    h = dot(oc, r.direction())
+    c = oc.length_squared() - radius**2
+    discriminant = h**2 - a*c # value under sqrt, if > 0 => ray intersects sphere
     if discriminant < 0:
         return -1
     else:
         # return value which is needed to calculate the hit point on the sphere
         # -> t in ray equation
-        return (-b - math.sqrt(discriminant)) / (2 * a)
+        return (-h - math.sqrt(discriminant)) / a
 
 # returns a lerp between light purple and white as a background
 def rayColor(r: Ray) -> Color:
