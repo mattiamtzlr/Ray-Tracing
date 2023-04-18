@@ -6,6 +6,7 @@ from typing import Optional
 # instantiated with an optional object.
 class HittableList(Hittable):
     def __init__(self, object: Optional[Hittable] = None):
+        super().__init__()
         self.objects = []
         if object is not None:
             self.add(object)
@@ -28,6 +29,9 @@ class HittableList(Hittable):
             if object.hit(r, tMin, closest, tempRec):
                 hitAnything = True
                 closest = tempRec.t
-                rec = tempRec
+                rec.p = tempRec.p
+                rec.t = tempRec.t
+                rec.normal = tempRec.normal
+                rec.frontFace = tempRec.frontFace
         
         return hitAnything
