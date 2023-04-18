@@ -8,8 +8,32 @@ except ModuleNotFoundError:
     print("This script requires tqdm to be installed.\n Install it using 'pip install tqdm'.")
     exit(-1)
 
-# returns a lerp between light blue and white as a background
+# method to test wether a ray intersects a spehere using a quadratic equation
+def hitSphere(center: Point3, radius, r: Ray) -> float:
+    oc = vecSub(r.origin(), center)
+    a = dot(r.direction(), r.direction())
+    b = 2 * dot(oc, r.direction())
+    c = dot(oc, oc) - radius**2
+    discriminant = b**2 - 4*a*c # value under sqrt, if > 0 => ray intersects sphere
+    if discriminant < 0:
+        return -1
+    else:
+        # return value which is needed to calculate the hit point on the sphere
+        # -> t in ray equation
+        return (-b - math.sqrt(discriminant)) / (2 * a)
+
+# returns a lerp between light purple and white as a background
 def rayColor(r: Ray) -> Color:
+    # t value passed from hitSphere used for calculating the hitpoint along the ray
+    # when passing through a small sphere at (0, 0, -1)
+    t = hitSphere(Point3(0, 0, -1), 0.5, r)
+    if t > 0:
+        # calculate surface normal at hitpoint (dist between hitpoint and sphere 
+        # center) color the normals based on their vectors
+        N = unit_vector(vecSub(r.at(t), Point3(0, 0, -1)))
+        return vecScalarMul(Color(N.x() + 1, N.y() + 1, N.z() + 1), .5)
+
+    # if ray doesn't intersect sphere color the sky normally
     unitDirection = unit_vector(r.direction())
     t = 0.5 * (unitDirection.y() + 1)
     # return (1 - t) * Color(1, 1, 1) + t * Color(0.5, 0.7, 1.0)
@@ -67,4 +91,4 @@ with open("image.ppm", "w") as f:
             output += writeColor(pixelColor)
         progress.update(IMAGE_WIDTH - i)
     f.write(output)
-    
+ 
