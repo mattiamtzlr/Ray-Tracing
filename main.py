@@ -1,38 +1,20 @@
-import sys
-from vec3 import *
+from utility import *
 from color import *
-from ray import *
+from hittableList import *
+from sphere import *
+
 try:
     from tqdm import tqdm
 except ModuleNotFoundError:
     print("This script requires tqdm to be installed.\n Install it using 'pip install tqdm'.")
     exit(-1)
 
-# method to test wether a ray intersects a spehere using a quadratic equation
-def hitSphere(center: Point3, radius, r: Ray) -> float:
-    # substituting b with 2h
-    oc = vecSub(r.origin(), center)
-    a = r.direction().length_squared()
-    h = dot(oc, r.direction())
-    c = oc.length_squared() - radius**2
-    discriminant = h**2 - a*c # value under sqrt, if > 0 => ray intersects sphere
-    if discriminant < 0:
-        return -1
-    else:
-        # return value which is needed to calculate the hit point on the sphere
-        # -> t in ray equation
-        return (-h - math.sqrt(discriminant)) / a
-
 # returns a lerp between light purple and white as a background
-def rayColor(r: Ray) -> Color:
-    # t value passed from hitSphere used for calculating the hitpoint along the ray
-    # when passing through a small sphere at (0, 0, -1)
-    t = hitSphere(Point3(0, 0, -1), 0.5, r)
-    if t > 0:
-        # calculate surface normal at hitpoint (dist between hitpoint and sphere 
-        # center) color the normals based on their vectors
-        N = unit_vector(vecSub(r.at(t), Point3(0, 0, -1)))
-        return vecScalarMul(Color(N.x() + 1, N.y() + 1, N.z() + 1), .5)
+def rayColor(r: Ray, world: Hittable) -> Color:
+    # HitRecord from world with hit info of all objects
+    rec = HitRecord()
+    if world.hit(r, 0, INFINITY, rec):
+        return vecScalarMul(vecAdd(rec.normal, Color(1, 1, 1)), 0.5)
 
     # if ray doesn't intersect sphere color the sky normally
     unitDirection = unit_vector(r.direction())
@@ -40,13 +22,19 @@ def rayColor(r: Ray) -> Color:
     # return (1 - t) * Color(1, 1, 1) + t * Color(0.5, 0.7, 1.0)
     return vecAdd(
             vecScalarMul(Color(1, 1, 1), (1 - t)), 
-            vecScalarMul(Color(.839, .655, .98), t)
+            vecScalarMul(Color(.5, .7, 1), t)
         )
 
 # Image
 ASPECT_RATIO = 16 / 9
 IMAGE_WIDTH = 400
 IMAGE_HEIGHT = int(IMAGE_WIDTH / ASPECT_RATIO)
+
+# World
+world = HittableList()
+world.add(Sphere(Point3(-0.5, 0, -1), 0.5))
+world.add(Sphere(Point3(0, -100.5, -1), 100))
+world.add(Sphere(Point3(10, 1, -15), 2))
 
 # Camera
 viewportHeight = 2
@@ -87,7 +75,7 @@ with open("image.ppm", "w") as f:
                 vecAdd(lowerLeftCorner, vecScalarMul(horizontal, u)),
                 vecSub(vecScalarMul(vertical, v), origin)
             ))
-            pixelColor = rayColor(r)
+            pixelColor = rayColor(r, world)
             # create color vector
             output += writeColor(pixelColor)
         progress.update(IMAGE_WIDTH - i)
