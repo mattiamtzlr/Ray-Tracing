@@ -32,6 +32,7 @@ class Sphere(Hittable):
         rec.t = root
         rec.p = r.at(rec.t)
         # normal = (rec.p - center) / radius
-        rec.normal = vecScalarDiv(vecSub(rec.p, self.center), self.radius)
+        outwardNormal = vecScalarDiv(vecSub(rec.p, self.center), self.radius)
+        rec.setFaceNormal(r, outwardNormal)
 
         return True
