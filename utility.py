@@ -13,3 +13,9 @@ def degToRad(deg):
 
 def randomFloat(min, max):
     return min + (max - min) * random()
+
+def clamp(x, min, max):
+    """Clamps x between min and max, if outside the range, the return value is min or max respectively."""
+    if x < min: return min
+    if x > max: return max
+    return x

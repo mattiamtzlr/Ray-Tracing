@@ -2,6 +2,7 @@ from utility import *
 from color import *
 from hittableList import *
 from sphere import *
+from camera import *
 
 try:
     from tqdm import tqdm
@@ -29,6 +30,7 @@ def rayColor(r: Ray, world: Hittable) -> Color:
 ASPECT_RATIO = 16 / 9
 IMAGE_WIDTH = 400
 IMAGE_HEIGHT = int(IMAGE_WIDTH / ASPECT_RATIO)
+SAMPLES_PER_PIXEL = 15;
 
 # World
 world = HittableList()
@@ -37,24 +39,7 @@ world.add(Sphere(Point3(0, -100.5, -1), 100))
 world.add(Sphere(Point3(10, 1, -15), 2))
 
 # Camera
-viewportHeight = 2
-viewportWidth = ASPECT_RATIO * viewportHeight
-focalLength = 1
-
-origin = Point3(0, 0, 0)
-horizontal = Vec3(viewportWidth, 0, 0)
-vertical = Vec3(0, viewportHeight, 0)
-# lower_left_corner = origin - horizontal/2 - vertical/2 - vec3(0, 0, focal_length)
-
-lowerLeftCorner = vecSub(
-        vecSub(
-            vecSub(
-                origin, vecScalarDiv(horizontal, 2)
-            ), 
-            vecScalarDiv(vertical, 2)
-        ), 
-        Vec3(0, 0, focalLength)
-    )
+cam = Camera()
 
 # Render to ppm image format
 with open("image.ppm", "w") as f:
@@ -67,17 +52,15 @@ with open("image.ppm", "w") as f:
     # values are written from top left to bottom right
     for j in range(IMAGE_HEIGHT-1, -1, -1):        
         for i in range(IMAGE_WIDTH):
-            u = i / (IMAGE_WIDTH - 1)
-            v = j / (IMAGE_HEIGHT - 1)
+            pixelColor = Color(0, 0, 0)
+            # sample each pixel multiple times
+            for s in range(SAMPLES_PER_PIXEL):
+                u = (i + randomFloat(0, 1)) / (IMAGE_WIDTH-1)
+                v = (j + randomFloat(0, 1)) / (IMAGE_HEIGHT-1)
+                r = cam.getRay(u, v)
+                pixelColor = vecAdd(pixelColor, rayColor(r, world))
 
-            # r = Ray(origin, lower_left_corner + u*horizontal + v*vertical - origin)
-            r = Ray(origin, vecAdd(
-                vecAdd(lowerLeftCorner, vecScalarMul(horizontal, u)),
-                vecSub(vecScalarMul(vertical, v), origin)
-            ))
-            pixelColor = rayColor(r, world)
-            # create color vector
-            output += writeColor(pixelColor)
+            output += writeColor(pixelColor, SAMPLES_PER_PIXEL)
         progress.update(IMAGE_WIDTH - i)
     f.write(output)
  
