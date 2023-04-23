@@ -1,4 +1,6 @@
 from utility import *
+from vec3 import *
+from ray import *
 from color import *
 from hittableList import *
 from sphere import *
@@ -11,11 +13,34 @@ except ModuleNotFoundError:
     exit(-1)
 
 # returns a lerp between light purple and white as a background
-def rayColor(r: Ray, world: Hittable) -> Color:
+def rayColor(r: Ray, world: Hittable, depth: int) -> Color:
+    # save guard because of recusion
+    if depth <= 0:
+        return Color(0, 0, 0) # black
+
     # HitRecord from world with hit info of all objects
     rec = HitRecord()
     if world.hit(r, 0, INFINITY, rec):
-        return vecScalarMul(vecAdd(rec.normal, Color(1, 1, 1)), 0.5)
+        # use random bounce to simulate diffuse material
+        target = vecAdd(
+            vecAdd(
+            rec.p, rec.normal
+            ),
+            randomVecInUnitSphere()
+        )
+        # use rayColor recursively with the new resulting ray
+        # return 0.5 * ray_color(ray(rec.p, target - rec.p), world)
+        return vecScalarMul(
+            rayColor(
+                Ray(
+                    rec.p,
+                    vecSub(target, rec.p)
+                ), 
+                world,
+                depth-1
+            ),
+            0.5
+        )
 
     # if ray doesn't intersect sphere color the sky normally
     unitDirection = unit_vector(r.direction())
@@ -30,13 +55,15 @@ def rayColor(r: Ray, world: Hittable) -> Color:
 ASPECT_RATIO = 16 / 9
 IMAGE_WIDTH = 400
 IMAGE_HEIGHT = int(IMAGE_WIDTH / ASPECT_RATIO)
-SAMPLES_PER_PIXEL = 15;
+SAMPLES_PER_PIXEL = 5 # set to at least 30 for good images -> takes long as fuck
+MAX_DEPTH = 30
 
 # World
 world = HittableList()
-world.add(Sphere(Point3(-0.5, 0, -1), 0.5))
-world.add(Sphere(Point3(0, -100.5, -1), 100))
-world.add(Sphere(Point3(10, 1, -15), 2))
+world.add(Sphere(Point3(-0.5, 0, -1.2), 0.5))
+world.add(Sphere(Point3(-0.25, .4, -1), 0.15))
+world.add(Sphere(Point3(4, 1.5, -7), 1))
+world.add(Sphere(Point3(0, -200.5, -10), 200)) # "ground"
 
 # Camera
 cam = Camera()
@@ -58,7 +85,7 @@ with open("image.ppm", "w") as f:
                 u = (i + randomFloat(0, 1)) / (IMAGE_WIDTH-1)
                 v = (j + randomFloat(0, 1)) / (IMAGE_HEIGHT-1)
                 r = cam.getRay(u, v)
-                pixelColor = vecAdd(pixelColor, rayColor(r, world))
+                pixelColor = vecAdd(pixelColor, rayColor(r, world, MAX_DEPTH))
 
             output += writeColor(pixelColor, SAMPLES_PER_PIXEL)
         progress.update(IMAGE_WIDTH - i)

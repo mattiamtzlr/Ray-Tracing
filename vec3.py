@@ -1,4 +1,5 @@
 import math
+from utility import *
 
 class Vec3:
     def __init__(self, e0=0, e1=0, e2=0) -> None:
@@ -78,3 +79,13 @@ def cross(u: Vec3, v: Vec3):
 
 def unit_vector(v: Vec3):
     return vecScalarDiv(v, v.length())
+
+def randomVec(min: float, max: float) -> Vec3:
+    return Vec3(randomFloat(min, max), randomFloat(min, max), randomFloat(min, max))
+
+def randomVecInUnitSphere():
+    while True:
+        p = randomVec(-1, 1)
+        if p.length_squared() >= 1:
+            continue
+        return p
