@@ -1,4 +1,5 @@
-from utility import *
+from vec3 import *
+from ray import *
 
 class Camera:
     def __init__(self) -> None:
