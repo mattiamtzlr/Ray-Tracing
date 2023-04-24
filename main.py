@@ -20,7 +20,7 @@ def rayColor(r: Ray, world: Hittable, depth: int) -> Color:
 
     # HitRecord from world with hit info of all objects
     rec = HitRecord()
-    if world.hit(r, 0, INFINITY, rec):
+    if world.hit(r, 0.001, INFINITY, rec):
         # use random bounce to simulate diffuse material
         target = vecAdd(
             vecAdd(
@@ -56,12 +56,12 @@ ASPECT_RATIO = 16 / 9
 IMAGE_WIDTH = 400
 IMAGE_HEIGHT = int(IMAGE_WIDTH / ASPECT_RATIO)
 SAMPLES_PER_PIXEL = 5 # set to at least 30 for good images -> takes long as fuck
-MAX_DEPTH = 30
+MAX_DEPTH = 20
 
 # World
 world = HittableList()
 world.add(Sphere(Point3(-0.5, 0, -1.2), 0.5))
-world.add(Sphere(Point3(-0.25, .4, -1), 0.15))
+world.add(Sphere(Point3(-0.3, .6, -0.9), 0.15))
 world.add(Sphere(Point3(4, 1.5, -7), 1))
 world.add(Sphere(Point3(0, -200.5, -10), 200)) # "ground"
 

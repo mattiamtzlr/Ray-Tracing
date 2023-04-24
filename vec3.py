@@ -23,20 +23,20 @@ class Vec3:
     def __setComp__(self, comp, val):
         self.e[comp] = val
 
-    def __iadd__(self, vec):
-        self.e[0] += vec.e[0]
-        self.e[1] += vec.e[1]
-        self.e[2] += vec.e[2]
-        return self
+    # def __iadd__(self, vec):
+    #     self.e[0] += vec.e[0]
+    #     self.e[1] += vec.e[1]
+    #     self.e[2] += vec.e[2]
+    #     return self
     
-    def __imul__(self, t):
-        self.e[0] *= t
-        self.e[1] *= t
-        self.e[2] *= t
-        return self
+    # def __imul__(self, t):
+    #     self.e[0] *= t
+    #     self.e[1] *= t
+    #     self.e[2] *= t
+    #     return self
     
-    def __idiv__(self, t):
-        return self.__imul__(1/t)
+    # def __idiv__(self, t):
+    #     return self.__imul__(1/t)
     
     def length(self):
         return math.sqrt(self.length_squared())
