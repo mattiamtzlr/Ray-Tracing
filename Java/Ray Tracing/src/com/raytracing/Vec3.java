@@ -23,7 +23,7 @@ public class Vec3 {
         return this.e[2];
     }
 
-    private Vec3 negate() {
+    public Vec3 negate() {
         return new Vec3(-this.e[0], -this.e[1], -this.e[2]);
     }
 

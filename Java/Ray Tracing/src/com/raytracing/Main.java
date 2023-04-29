@@ -2,28 +2,28 @@ package com.raytracing;
 
 public class Main {
     public static void main(String[] args) {
-        Vec3 a = new Vec3(1, 2, 3);
-        Vec3 b = new Vec3(4, 5, 6);
-        Vec3 c = new Vec3(5, 10, 15);
+        System.out.println("Hello World");
+    }
 
-        int x = 5;
+    // function to generate a color String, originally in color.py
+    public static String writeColor(Color pixelColor, int samplesPerPixel) {
+        double r = pixelColor.x();
+        double g = pixelColor.y();
+        double b = pixelColor.z();
 
-        System.out.println(Vec3.add(a, b).toString());
-        System.out.println(Vec3.sub(b, a).toString());
-        System.out.println(Vec3.mul(a, x).toString());
-        System.out.println(Vec3.div(c, x).toString());
-        System.out.println(Vec3.dot(a, b));
-        System.out.println(Vec3.cross(a, b).toString());
+        // divide the color by the number of samples and gamma correct for gamma = 2
+        // -> raising color to the power 1/gamma -> 1/2 -> sqrt
 
-        System.out.println("-----------------------------------------------");
+        double scale = (double) 1 / samplesPerPixel;
+        r = Math.sqrt(scale * r);
+        g = Math.sqrt(scale * g);
+        b = Math.sqrt(scale * b);
 
-        System.out.println(Vec3.random(0.3, 0.8).toString());
-
-        double y = 0.4;
-        double min = 0.3;
-        double max = 0.9;
-
-        System.out.println("-----------------------------------------------");
-        System.out.println(Utility.clamp(y, min, max));
+        // return the translated (0 to 255) value of each component
+        return String.format("%d %d %d\n",
+                (int) (256 * Utility.clamp(r, 0, 0.999)),
+                (int) (256 * Utility.clamp(g, 0, 0.999)),
+                (int) (256 * Utility.clamp(b, 0, 0.999))
+        );
     }
 }
