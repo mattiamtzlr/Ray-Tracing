@@ -47,6 +47,14 @@ public class Vec3 {
         return this.e[0] + " " + this.e[1] + " " + this.e[2];
     }
 
+    public Color toColor() {
+        return new Color(this.x(), this.y(), this.z());
+    }
+
+    public Point3 toPoint3() {
+        return new Point3(this.x(), this.y(), this.z());
+    }
+
     // Utility
     public static Vec3 add(Vec3 u, Vec3 v) {
         return new Vec3(u.e[0] + v.e[0], u.e[1] + v.e[1], u.e[2] + v.e[2]);

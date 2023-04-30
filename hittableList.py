@@ -18,7 +18,7 @@ class HittableList(Hittable):
         self.objects.append(object)
 
     # hit method loops through all objects and tests if they are hit by the ray
-    # if save time it sets the closest t value to avoid searching behind already 
+    # to save time it sets the closest t value to avoid searching behind already 
     # hit objects
     def hit(self, r: Ray, tMin: float, tMax: float, rec: HitRecord) -> bool:
         tempRec = HitRecord()

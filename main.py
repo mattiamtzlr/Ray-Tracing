@@ -12,9 +12,9 @@ except ModuleNotFoundError:
     print("This script requires tqdm to be installed.\n Install it using 'pip install tqdm'.")
     exit(-1)
 
-# returns a lerp between light purple and white as a background
+# method to figure out what color the ray should return
 def rayColor(r: Ray, world: Hittable, depth: int) -> Color:
-    # save guard because of recusion
+    # safe guard because of recursion
     if depth <= 0:
         return Color(0, 0, 0) # black
 
@@ -29,7 +29,7 @@ def rayColor(r: Ray, world: Hittable, depth: int) -> Color:
             randomVecInUnitSphere()
         )
         # use rayColor recursively with the new resulting ray
-        # return 0.5 * ray_color(ray(rec.p, target - rec.p), world)
+        # return 0.5 * ray_color(ray(rec.p, target - rec.p), world, depth-1)
         return vecScalarMul(
             rayColor(
                 Ray(

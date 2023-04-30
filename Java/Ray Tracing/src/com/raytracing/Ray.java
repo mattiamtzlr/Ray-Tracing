@@ -21,6 +21,6 @@ public class Ray {
     }
 
     public Point3 at(double t) {
-        return (Point3) Vec3.add(this.origin, Vec3.mul(this.direction, t));
+        return Vec3.add(this.origin, Vec3.mul(this.direction, t)).toPoint3();
     }
 }
