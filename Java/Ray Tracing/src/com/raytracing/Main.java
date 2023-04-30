@@ -7,10 +7,10 @@ public class Main {
     public static void main(String[] args) {
         // image properties
         final double aspectRatio = (double) 16 / 9;
-        final int imageWidth = 400;
+        final int imageWidth = 480; // set to 1080 for good render
         final int imageHeight = (int) (imageWidth / aspectRatio);
-        final int samplesPerPixel = 5;
-        final int maxDepth = 20;
+        final int samplesPerPixel = 15; // set to at least 100
+        final int maxDepth = 25; // set to at least 50
 
         // world
         HittableList world = new HittableList();
@@ -32,7 +32,8 @@ public class Main {
 
             for (int j = imageHeight-1; j >= 0 ; j--) {
                 // progress
-                System.out.print("\rScanlines remaining: " + j + " - " + (imageHeight - j) / imageHeight * 100 + "% ");
+                System.out.print("\rScanlines remaining: " + j + " --- " +
+                    (int) (((double) (imageHeight - j) / imageHeight) * 100) + "% completed");
                 System.out.flush();
 
                 for (int i = 0; i < imageWidth; i++) {
@@ -75,7 +76,8 @@ public class Main {
                     rec.getP(),
                     rec.getNormal()
                 ),
-                Vec3.randomInUnitSphere()
+                Vec3.randomUnitVector()
+                // use either randomUnitVector() or randomInHemisphere(rec.getNormal())
             );
 
             // use rayColor recursively with the new target ray

@@ -112,6 +112,22 @@ public class Vec3 {
             return p;
         }
     }
+
+    // lambertian distribution light scattering
+    public static Vec3 randomUnitVector() {
+        // normalized random Vector => correct lambertian distribution
+        return unitVector(randomInUnitSphere());
+    }
+
+    // alternative method of light scattering: hemisphere scattering
+    public static Vec3 randomInHemisphere(Vec3 normal) {
+        Vec3 inUnitSphere = randomInUnitSphere();
+        if (dot(inUnitSphere, normal) > 0) {
+            return inUnitSphere;
+        } else {
+            return inUnitSphere.negate();
+        }
+    }
 }
 
 // Type aliases
