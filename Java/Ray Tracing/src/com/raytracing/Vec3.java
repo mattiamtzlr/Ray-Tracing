@@ -5,6 +5,10 @@ import java.lang.Math;
 public class Vec3 {
     public double[] e = new double[3];
 
+    public Vec3() {
+        e = new double[]{0, 0, 0};
+    }
+
     public Vec3(double e0, double e1, double e2) {
         this.e[0] = e0;
         this.e[1] = e1;
@@ -43,12 +47,18 @@ public class Vec3 {
         return this.e[0] * this.e[0] + this.e[1] * this.e[1] + this.e[2] * this.e[2];
     }
 
+    // function to check whether the vector is very close to being zero in any dimension
+    public boolean nearZero() {
+        final double s = 1e-8;
+        return (Math.abs(this.e[0]) < s) && (Math.abs(this.e[1]) < s) && (Math.abs(this.e[2]) < s);
+    }
+
     public String toString() {
         return this.e[0] + " " + this.e[1] + " " + this.e[2];
     }
 
     public Color toColor() {
-        return new Color(this.x(), this.y(), this.z());
+        return new Color(this.e[0], this.e[1], this.e[2]);
     }
 
     public Point3 toPoint3() {
@@ -84,6 +94,14 @@ public class Vec3 {
             u.e[1] * v.e[2] - u.e[2] * v.e[1],
             u.e[2] * v.e[0] - u.e[0] * v.e[2],
             u.e[0] * v.e[1] - u.e[1] * v.e[0]
+        );
+    }
+
+    public static Vec3 reflect(Vec3 v, Vec3 n) {
+        // return v - 2 * dot(v, n) * n
+        return Vec3.sub(
+            v,
+            Vec3.mul(n, 2 * dot(v, n))
         );
     }
 
@@ -132,12 +150,18 @@ public class Vec3 {
 
 // Type aliases
 class Point3 extends Vec3 {
+    public Point3() {
+        super();
+    }
     public Point3(double x, double y, double z) {
         super(x, y, z);
     }
 }
 
 class Color extends Vec3 {
+    public Color() {
+        super();
+    }
     public Color(double r, double g, double b) {
         super(r, g, b);
     }

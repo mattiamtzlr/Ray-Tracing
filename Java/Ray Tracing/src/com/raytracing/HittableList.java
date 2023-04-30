@@ -28,8 +28,7 @@ public class HittableList implements Hittable{
     }
 
     // hit method loops through all objects and tests if they are hit by the ray.
-    // to save time it sets the closest t value to avoid searching behind already
-    // hit objects
+    // to save time it sets the closest t value to avoid searching behind already hit objects
     @Override
     public boolean hit(Ray r, double tMin, double tMax, HitRecord rec) {
         HitRecord tempRec = new HitRecord();
@@ -42,6 +41,7 @@ public class HittableList implements Hittable{
                 closest = tempRec.getT();
                 rec.setP(tempRec.getP());
                 rec.setT(tempRec.getT());
+                rec.setMaterial(tempRec.getMaterial());
                 rec.setNormal(tempRec.getNormal());
                 rec.setFrontFace(tempRec.isFrontFace());
             }

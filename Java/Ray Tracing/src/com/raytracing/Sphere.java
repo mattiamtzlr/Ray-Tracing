@@ -4,10 +4,12 @@ public class Sphere implements Hittable {
 
     private final Point3 center;
     private final double radius;
+    private final Material material;
 
-    public Sphere(Point3 center, double radius) {
+    public Sphere(Point3 center, double radius, Material material) {
         this.center = center;
         this.radius = radius;
+        this.material = material;
     }
 
     @Override
@@ -35,6 +37,7 @@ public class Sphere implements Hittable {
 
         rec.setT(root);
         rec.setP(r.at(rec.getT()));
+        rec.setMaterial(this.material);
         // normal = (rec.p - center) / radius
         Vec3 outwardNormal = Vec3.div(Vec3.sub(rec.getP(), this.center), radius);
         rec.setFaceNormal(r, outwardNormal);

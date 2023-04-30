@@ -5,6 +5,8 @@ public class HitRecord {
 
     private Point3 p;
     private Vec3 normal;
+
+    private Material material;
     private double t;
     private boolean frontFace;
 
@@ -12,6 +14,7 @@ public class HitRecord {
     public HitRecord() {
         this.p = null;
         this.normal = null;
+        this.material = null;
         this.t = 0;
         this.frontFace = false;
 
@@ -28,6 +31,9 @@ public class HitRecord {
     public void setNormal(Vec3 normal) {
         this.normal = normal;
     }
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
     public void setT(double t) {
         this.t = t;
     }
@@ -40,6 +46,9 @@ public class HitRecord {
     }
     public Vec3 getNormal() {
         return normal;
+    }
+    public Material getMaterial() {
+        return material;
     }
     public double getT() {
         return t;

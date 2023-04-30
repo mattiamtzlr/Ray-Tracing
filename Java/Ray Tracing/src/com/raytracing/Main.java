@@ -5,19 +5,35 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
+        // render boolean => true for a good render
+        boolean render = false;
+
         // image properties
         final double aspectRatio = (double) 16 / 9;
-        final int imageWidth = 480; // set to 1080 for good render
+        final int imageWidth = render ? 1080 : 480;
         final int imageHeight = (int) (imageWidth / aspectRatio);
-        final int samplesPerPixel = 15; // set to at least 100
-        final int maxDepth = 25; // set to at least 50
+        final int samplesPerPixel = render ? 100 : 10;
+        final int maxDepth = render ? 100 : 25;
 
         // world
         HittableList world = new HittableList();
+
+        Material materialGround = new Lambertian(new Color(0.8, 0.8, 0.0));
+        Material materialCenter = new Lambertian(new Color(0.7, 0.3, 0.3));
+        Material materialLeft = new Metal(new Color(0.8, 0.8, 0.8));
+        Material materialRight = new Metal(new Color(0.8, 0.6, 0.2));
+
+        world.add(new Sphere(new Point3(0, -200.5, -10), 200, materialGround)); // "ground"
+        world.add(new Sphere(new Point3(0, 0, -1), 0.5, materialCenter));
+        world.add(new Sphere(new Point3(-1,0, -1), 0.5, materialLeft));
+        world.add(new Sphere(new Point3(1, 0, -1), 0.5, materialRight));
+
+
+        /* "floating spheres"
         world.add(new Sphere(new Point3(-0.5, 0, -1.2), 0.5));
         world.add(new Sphere(new Point3(-0.3, .6, -0.9), 0.15));
         world.add(new Sphere(new Point3(4, 1.5, -7), 1));
-        world.add(new Sphere(new Point3(0, -200.5, -10), 200)); // "ground"
+         */
 
         // camera
         Camera cam = new Camera();
@@ -70,29 +86,12 @@ public class Main {
         // HitRecord from world with hit info of all objects
         HitRecord rec = new HitRecord();
         if (world.hit(r, 0.001, Utility.Infinity, rec)) {
-            // random bounce to simulate diffuse material
-            Vec3 target = Vec3.add(
-                Vec3.add(
-                    rec.getP(),
-                    rec.getNormal()
-                ),
-                Vec3.randomUnitVector()
-                // use either randomUnitVector() or randomInHemisphere(rec.getNormal())
-            );
-
-            // use rayColor recursively with the new target ray
-            // return 0.5 * rayColor(ray(rec.p, target - rec.p), world)
-            return Vec3.mul(
-                rayColor(
-                    new Ray(
-                        rec.getP(),
-                        Vec3.sub(target, rec.getP())
-                    ),
-                    world,
-                    depth-1
-                ),
-                0.5
-            ).toColor();
+            Ray scattered = new Ray();
+            Color attenuation = new Color();
+            if (rec.getMaterial().scatter(r, rec, attenuation, scattered)) {
+                return Vec3.mul(attenuation, rayColor(scattered, world, depth - 1)).toColor();
+            }
+            return new Color(0, 0, 0);
         }
 
         // if the ray doesn't intersect anything, color the sky normally
