@@ -18,22 +18,19 @@ public class Main {
         // world
         HittableList world = new HittableList();
 
-        Material materialGround = new Lambertian(new Color(0.8, 0.8, 0.0));
+        Material materialGround = new Lambertian(Utility.strToColor("188, 247, 161"));
+
         Material materialCenter = new Lambertian(new Color(0.7, 0.3, 0.3));
         Material materialLeft = new Metal(new Color(0.8, 0.8, 0.8));
         Material materialRight = new Metal(new Color(0.8, 0.6, 0.2));
 
+
         world.add(new Sphere(new Point3(0, -200.5, -10), 200, materialGround)); // "ground"
+
+         // spheres next to each other
+        world.add(new Sphere(new Point3(-1,0, -1), 0.4, materialLeft));
         world.add(new Sphere(new Point3(0, 0, -1), 0.5, materialCenter));
-        world.add(new Sphere(new Point3(-1,0, -1), 0.5, materialLeft));
-        world.add(new Sphere(new Point3(1, 0, -1), 0.5, materialRight));
-
-
-        /* "floating spheres"
-        world.add(new Sphere(new Point3(-0.5, 0, -1.2), 0.5));
-        world.add(new Sphere(new Point3(-0.3, .6, -0.9), 0.15));
-        world.add(new Sphere(new Point3(4, 1.5, -7), 1));
-         */
+        world.add(new Sphere(new Point3(1, 0, -1), 0.4, materialRight));
 
         // camera
         Camera cam = new Camera();

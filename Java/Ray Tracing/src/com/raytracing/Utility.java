@@ -25,4 +25,20 @@ public class Utility {
         // Clamps x between min and max, if outside the range, the return value is min or max respectively.
         return Math.min(Math.max(x, min), max);
     }
+
+    /**
+     * Returns a com.raytracing.Color object of the provided color in string format
+     *
+     * @param color a color in string format: "r, g, b"
+     * @return a Color object with values between 0 and 1
+     */
+    public static Color strToColor(String color) {
+        String[] colorArray = color.split(",");
+
+        Color output = new Color();
+        for (int i = 0; i < colorArray.length; i++) {
+            output.setComp(i, Double.parseDouble(colorArray[i]) / 256);
+        }
+        return output;
+    }
 }

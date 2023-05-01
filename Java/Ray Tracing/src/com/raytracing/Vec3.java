@@ -31,12 +31,18 @@ public class Vec3 {
         return new Vec3(-this.e[0], -this.e[1], -this.e[2]);
     }
 
-    private double getComp(int comp) {
+    public double getComp(int comp) {
         return this.e[comp];
     }
 
-    private void setComp(int comp, double val) {
+    public void setComp(int comp, double val) {
         this.e[comp] = val;
+    }
+
+    public void set(Vec3 newVec) {
+        this.e[0] = newVec.e[0];
+        this.e[1] = newVec.e[1];
+        this.e[2] = newVec.e[2];
     }
 
     public double length() {
