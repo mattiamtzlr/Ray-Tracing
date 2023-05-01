@@ -37,7 +37,7 @@ public class Utility {
 
         Color output = new Color();
         for (int i = 0; i < colorArray.length; i++) {
-            output.setComp(i, Double.parseDouble(colorArray[i]) / 256);
+            output.setComp(i, Double.parseDouble(colorArray[i]) / 255);
         }
         return output;
     }
