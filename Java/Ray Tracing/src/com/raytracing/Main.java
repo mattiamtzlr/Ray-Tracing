@@ -6,31 +6,31 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
         // render boolean => true for a good render
-        boolean render = false;
+        boolean render = true;
 
         // image properties
         final double aspectRatio = (double) 16 / 9;
         final int imageWidth = render ? 1080 : 480;
         final int imageHeight = (int) (imageWidth / aspectRatio);
-        final int samplesPerPixel = render ? 100 : 10;
-        final int maxDepth = render ? 100 : 25;
+        final int samplesPerPixel = render ? 100 : 5;
+        final int maxDepth = render ? 100 : 15;
 
         // world
         HittableList world = new HittableList();
 
-        Material materialGround = new Lambertian(Utility.strToColor("188, 247, 161"));
+        Material materialGround = new Lambertian(Utility.strToColor("131, 194, 48"));
 
-        Material materialCenter = new Lambertian(new Color(0.7, 0.3, 0.3));
-        Material materialLeft = new Metal(new Color(0.8, 0.8, 0.8));
-        Material materialRight = new Metal(new Color(0.8, 0.6, 0.2));
+        Material materialLeft = new Metal(Utility.strToColor("220, 220, 220"), 0);
+        Material materialCenter = new Lambertian(Utility.strToColor("194, 65, 48"));
+        Material materialRight = new Metal(Utility.strToColor("255, 172, 64"), 0.3);
 
 
-        world.add(new Sphere(new Point3(0, -200.5, -10), 200, materialGround)); // "ground"
+        world.add(new Sphere(new Point3(0, -100.5, -10), 100, materialGround)); // "ground"
 
          // spheres next to each other
-        world.add(new Sphere(new Point3(-1,0, -1), 0.4, materialLeft));
-        world.add(new Sphere(new Point3(0, 0, -1), 0.5, materialCenter));
-        world.add(new Sphere(new Point3(1, 0, -1), 0.4, materialRight));
+        world.add(new Sphere(new Point3(-1,0.5, -0.9), 0.2, materialLeft));
+        world.add(new Sphere(new Point3(-0.4, -0.1, -1), 0.5, materialCenter));
+        world.add(new Sphere(new Point3(3, 2, -5), 2, materialRight));
 
         // camera
         Camera cam = new Camera();
@@ -115,7 +115,7 @@ public class Main {
         g = Math.sqrt(scale * g);
         b = Math.sqrt(scale * b);
 
-        // return the translated (0 to 255) value of each component
+        // return the translated (0 to 256) value of each component
         return String.format("%d %d %d\n",
                 (int) (256 * Utility.clamp(r, 0, 0.999)),
                 (int) (256 * Utility.clamp(g, 0, 0.999)),
