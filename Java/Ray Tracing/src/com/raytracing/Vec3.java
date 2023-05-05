@@ -149,6 +149,14 @@ public class Vec3 {
         }
     }
 
+    public static Vec3 randomInUnitDisk() {
+        while (true) {
+            Vec3 p = new Vec3(Utility.randomDouble(-1, 1), Utility.randomDouble(-1, 1), 0);
+            if (p.lengthSquared() >= 1) continue;
+            return p;
+        }
+    }
+
     // lambertian distribution light scattering
     public static Vec3 randomUnitVector() {
         // normalized random Vector => correct lambertian distribution

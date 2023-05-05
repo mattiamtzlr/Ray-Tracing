@@ -12,15 +12,15 @@ public class Main {
         final double aspectRatio = (double) 16 / 9;
         final int imageWidth = render ? 1000 : 400;
         final int imageHeight = (int) (imageWidth / aspectRatio);
-        final int samplesPerPixel = render ? 100 : 5;
-        final int maxDepth = render ? 100 : 15;
+        final int samplesPerPixel = render ? 80 : 5;
+        final int maxDepth = render ? 80 : 15;
 
         // world
         HittableList world = new HittableList();
 
         Material materialGround = new Lambertian(Utility.strToColor("119, 189, 43"));
 
-        Material materialLeft = new Dielectric( 1.5, Utility.strToColor("255, 130, 130"));
+        Material materialLeft = new Dielectric( 1.5, Utility.strToColor("255, 150, 150"));
         Material materialCenter = new Lambertian(Utility.strToColor("56, 84, 194"));
         Material materialRight = new Metal(Utility.strToColor("255, 172, 64"), 0.3);
 
@@ -30,8 +30,8 @@ public class Main {
         world.add(new Sphere(new Point3(0, -100.5, -10), 100, materialGround)); // "ground"
 
          // spheres next to each other
-        world.add(new Sphere(new Point3(-1,0, -1), 0.5, materialLeft)); // hollow glass sphere
-        world.add(new Sphere(new Point3(-1,0, -1), -0.4, materialLeft));
+        world.add(new Sphere(new Point3(-1, 0, -1), 0.5, materialLeft)); // hollow glass sphere
+        world.add(new Sphere(new Point3(-1, 0, -1), -0.4, materialLeft));
 
         world.add(new Sphere(new Point3(0, 0, -1), 0.5, materialCenter));
         world.add(new Sphere(new Point3(1, 0, -1), 0.5, materialRight));
@@ -41,13 +41,16 @@ public class Main {
         // camera
         boolean fromFront = false;
 
-        Point3 lookFrom = fromFront ? new Point3(0, 0, 0) : new Point3(-2.5, 2, 1);
-        Point3 lookAt = fromFront ? new Point3(0, 0, -1) : new Point3(0, -.2, -1);
+        Point3 lookFrom = fromFront ? new Point3(0, 0, 0) : new Point3(-2.5, 2.5, 1);
+        Point3 lookAt = new Point3(0, 0, -1);
         Vec3 viewUp = new Vec3(0, 1, 0); // horizontally level view
 
         double vFOV = fromFront ? 90 : 40;
 
-        Camera cam = new Camera(lookFrom, lookAt, viewUp, vFOV, aspectRatio);
+        double distToFocus = Vec3.sub(lookFrom, lookAt).length();
+        double aperture = 0.5;
+
+        Camera cam = new Camera(lookFrom, lookAt, viewUp, vFOV, aspectRatio, aperture, distToFocus);
 
         // render to ppm image format
         String fileName = "output.ppm";
