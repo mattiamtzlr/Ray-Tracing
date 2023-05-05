@@ -10,7 +10,7 @@ public class Main {
 
         // image properties
         final double aspectRatio = (double) 16 / 9;
-        final int imageWidth = render ? 1080 : 480;
+        final int imageWidth = render ? 1000 : 400;
         final int imageHeight = (int) (imageWidth / aspectRatio);
         final int samplesPerPixel = render ? 100 : 5;
         final int maxDepth = render ? 100 : 15;
@@ -18,19 +18,20 @@ public class Main {
         // world
         HittableList world = new HittableList();
 
-        Material materialGround = new Lambertian(Utility.strToColor("131, 194, 48"));
+        Material materialGround = new Lambertian(Utility.strToColor("131, 215, 48"));
 
-        Material materialLeft = new Metal(Utility.strToColor("220, 220, 220"), 0);
-        Material materialCenter = new Lambertian(Utility.strToColor("194, 65, 48"));
-        Material materialRight = new Metal(Utility.strToColor("255, 172, 64"), 0.3);
+        Material materialLeft = new Dielectric( 1.5);
+        Material materialCenter = new Lambertian(Utility.strToColor("56, 84, 194"));
+        Material materialRight = new Metal(Utility.strToColor("255, 172, 64"), 0);
 
 
         world.add(new Sphere(new Point3(0, -100.5, -10), 100, materialGround)); // "ground"
 
          // spheres next to each other
-        world.add(new Sphere(new Point3(-1,0.5, -0.9), 0.2, materialLeft));
-        world.add(new Sphere(new Point3(-0.4, -0.1, -1), 0.5, materialCenter));
-        world.add(new Sphere(new Point3(3, 2, -5), 2, materialRight));
+        world.add(new Sphere(new Point3(-1,0, -1), 0.5, materialLeft));
+        world.add(new Sphere(new Point3(-1,0, -1), -0.4, materialLeft)); // hollow glass sphere
+        world.add(new Sphere(new Point3(0, 0, -1), 0.5, materialCenter));
+        world.add(new Sphere(new Point3(1, 0, -1), 0.5, materialRight));
 
         // camera
         Camera cam = new Camera();
@@ -53,8 +54,8 @@ public class Main {
                     Color pixelColor = new Color(0, 0, 0);
                     // multiple samples per pixel
                     for (int s = 0; s < samplesPerPixel; s++) {
-                        double u = (i + Utility.randomFloat()) / (imageWidth - 1);
-                        double v = (j + Utility.randomFloat()) / (imageHeight - 1);
+                        double u = (i + Utility.randomDouble()) / (imageWidth - 1);
+                        double v = (j + Utility.randomDouble()) / (imageHeight - 1);
                         Ray r = cam.getRay(u, v);
                         pixelColor = Vec3.add(pixelColor, rayColor(r, world, maxDepth)).toColor();
                     }

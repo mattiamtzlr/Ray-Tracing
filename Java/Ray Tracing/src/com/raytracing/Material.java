@@ -14,8 +14,9 @@ class Lambertian extends Material {
 
     @Override
     public boolean scatter(Ray rIn, HitRecord rec, Color attenuation, Ray scattered) {
-        // use either randomUnitVector() or randomInHemisphere(rec.getNormal()) as second parameter
-        Vec3 scatterDirection = Vec3.add(rec.getNormal(), Vec3.randomUnitVector());
+        // use either randomInUnitSphere(), randomUnitVector() or randomInHemisphere(rec.getNormal())
+        // as second parameter
+        Vec3 scatterDirection = Vec3.add(rec.getNormal(), Vec3.randomInUnitSphere());
 
         // catch near zero scatter direction
         if (scatterDirection.nearZero()) {
@@ -48,5 +49,45 @@ class Metal extends Material {
 
         attenuation.set(this.albedo);
         return (Vec3.dot(scattered.direction(), rec.getNormal()) > 0);
+    }
+}
+
+class Dielectric extends Material {
+    public double ir; // index of refraction
+
+    public Dielectric(double ir) {
+        this.ir = ir;
+    }
+
+    @Override
+    public boolean scatter(Ray rIn, HitRecord rec, Color attenuation, Ray scattered) {
+        // also a lot of scary math
+        attenuation.set(new Color(1, 1, 1));
+        double refractionRatio = rec.isFrontFace() ? (1 / this.ir) : this.ir;
+
+        Vec3 unitDirection = Vec3.unitVector(rIn.direction());
+        // only refract if possible, meaning as long as not inside the sphere
+        double cosTheta = Math.min(Vec3.dot(unitDirection.negate(), rec.getNormal()), 1);
+        double sinTheta = Math.sqrt(1 - cosTheta * cosTheta);
+
+        boolean cannotRefract = refractionRatio * sinTheta > 1;
+        Vec3 direction = new Vec3();
+
+        if (cannotRefract || reflectance(cosTheta, refractionRatio) > Utility.randomDouble()) {
+            direction.set(Vec3.reflect(unitDirection, rec.getNormal()));
+        } else {
+            direction.set(Vec3.refract(unitDirection, rec.getNormal(), refractionRatio));
+        }
+
+        scattered.setOrigin(rec.getP());
+        scattered.setDirection(direction);
+        return true;
+    }
+
+    private static double reflectance(double cosine, double refIdx) {
+        // Schlick's approximation for reflectance
+        double r0 = (1 - refIdx) / (1 + refIdx);
+        r0 = r0 * r0;
+        return r0 + (1 - r0) * Math.pow((1 - cosine), 5);
     }
 }

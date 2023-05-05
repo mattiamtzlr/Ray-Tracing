@@ -71,7 +71,7 @@ public class Vec3 {
         return new Point3(this.x(), this.y(), this.z());
     }
 
-    // Utility
+    // Utility (static)
     public static Vec3 add(Vec3 u, Vec3 v) {
         return new Vec3(u.e[0] + v.e[0], u.e[1] + v.e[1], u.e[2] + v.e[2]);
     }
@@ -111,19 +111,31 @@ public class Vec3 {
         );
     }
 
+    public static Vec3 refract(Vec3 uv, final Vec3 n, double etaiOverEtat) {
+        // very complicated math that I don't understand, but we ball
+        double cosTheta = Math.min(dot(uv.negate(), n), 1);
+        // rOutPerp = etaiOverEtat * (uv + cosTheta * n))
+        Vec3 rOutPerp = Vec3.mul(
+            Vec3.add(uv, Vec3.mul(n, cosTheta)),
+            etaiOverEtat
+        );
+        Vec3 rOutParallel = Vec3.mul(n, -Math.sqrt(Math.abs(1 - rOutPerp.lengthSquared())));
+        return Vec3.add(rOutPerp, rOutParallel);
+    }
+
     public static Vec3 unitVector(Vec3 v) {
         return div(v, v.length());
     }
 
     public static Vec3 random() {
-        return new Vec3(Utility.randomFloat(), Utility.randomFloat(), Utility.randomFloat());
+        return new Vec3(Utility.randomDouble(), Utility.randomDouble(), Utility.randomDouble());
     }
 
     public static Vec3 random(double min, double max) {
         return new Vec3(
-                Utility.randomFloat(min, max),
-                Utility.randomFloat(min, max),
-                Utility.randomFloat(min, max)
+                Utility.randomDouble(min, max),
+                Utility.randomDouble(min, max),
+                Utility.randomDouble(min, max)
         );
     }
 

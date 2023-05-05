@@ -12,11 +12,11 @@ public class Utility {
         return deg * Pi / 180;
     }
 
-    public static double randomFloat() {
+    public static double randomDouble() {
         Random random = new Random();
         return random.nextDouble();
     }
-    public static double randomFloat(double min, double max) {
+    public static double randomDouble(double min, double max) {
         Random random = new Random();
         return min + (max - min) * random.nextDouble();
     }
