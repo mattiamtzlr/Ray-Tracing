@@ -54,15 +54,22 @@ class Metal extends Material {
 
 class Dielectric extends Material {
     public double ir; // index of refraction
+    public Color albedo;
 
     public Dielectric(double ir) {
         this.ir = ir;
+        this.albedo = new Color(1, 1, 1);
+    }
+
+    public Dielectric(double ir, Color albedo) {
+        this.ir = ir;
+        this.albedo = albedo;
     }
 
     @Override
     public boolean scatter(Ray rIn, HitRecord rec, Color attenuation, Ray scattered) {
         // also a lot of scary math
-        attenuation.set(new Color(1, 1, 1));
+        attenuation.set(this.albedo);
         double refractionRatio = rec.isFrontFace() ? (1 / this.ir) : this.ir;
 
         Vec3 unitDirection = Vec3.unitVector(rIn.direction());
