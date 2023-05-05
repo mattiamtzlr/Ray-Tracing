@@ -18,24 +18,37 @@ public class Main {
         // world
         HittableList world = new HittableList();
 
-        Material materialGround = new Lambertian(Utility.strToColor("131, 215, 48"));
+        Material materialGround = new Lambertian(Utility.strToColor("119, 189, 43"));
 
-        Material materialLeft = new Dielectric( 1.5);
+        Material materialLeft = new Dielectric( 1.5, Utility.strToColor("255, 130, 130"));
         Material materialCenter = new Lambertian(Utility.strToColor("56, 84, 194"));
-        Material materialRight = new Metal(Utility.strToColor("255, 172, 64"), 0);
+        Material materialRight = new Metal(Utility.strToColor("255, 172, 64"), 0.3);
+
+        Material materialMirror = new Metal(new Color(0.7, 0.7, 0.7), 0);
 
 
         world.add(new Sphere(new Point3(0, -100.5, -10), 100, materialGround)); // "ground"
 
          // spheres next to each other
-        world.add(new Sphere(new Point3(-1,0, -1), 0.5, materialLeft));
-        world.add(new Sphere(new Point3(-1,0, -1), -0.4, materialLeft)); // hollow glass sphere
+        world.add(new Sphere(new Point3(-1,0, -1), 0.5, materialLeft)); // hollow glass sphere
+        world.add(new Sphere(new Point3(-1,0, -1), -0.4, materialLeft));
+
         world.add(new Sphere(new Point3(0, 0, -1), 0.5, materialCenter));
         world.add(new Sphere(new Point3(1, 0, -1), 0.5, materialRight));
 
+        world.add(new Sphere(new Point3(0, 0, -7), 5, materialMirror));
+
         // camera
-        Camera cam = new Camera();
-    
+        boolean fromFront = false;
+
+        Point3 lookFrom = fromFront ? new Point3(0, 0, 0) : new Point3(-2.5, 2, 1);
+        Point3 lookAt = fromFront ? new Point3(0, 0, -1) : new Point3(0, -.2, -1);
+        Vec3 viewUp = new Vec3(0, 1, 0); // horizontally level view
+
+        double vFOV = fromFront ? 90 : 40;
+
+        Camera cam = new Camera(lookFrom, lookAt, viewUp, vFOV, aspectRatio);
+
         // render to ppm image format
         String fileName = "output.ppm";
 

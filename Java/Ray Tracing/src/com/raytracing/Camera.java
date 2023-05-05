@@ -1,22 +1,30 @@
 package com.raytracing;
 
+import java.awt.*;
+
 public class Camera {
     private final Point3 origin;
     private final Vec3 horizontal;
     private final Vec3 vertical;
     private final Vec3 lowerLeftCorner;
 
-    public Camera() {
-        final double aspectRatio = (double) 16 / 9;
-        final double viewportHeight = 2;
-        final double viewportWidth = aspectRatio * viewportHeight;
-        final double focalLength = 1;
+    public Camera(Point3 lookFrom, Point3 lookAt, Vec3 viewUp, double vFOV, double aspectRatio) {
+        // vFOV = vertical FOV
+        double theta = Utility.degToRad(vFOV); // angle between z plane and viewing vector
+        double h = Math.tan(theta / 2); // height between z plane and viewing vector at z = -1
+        double viewportHeight = 2 * h;
+        double viewportWidth = aspectRatio * viewportHeight;
 
-        this.origin = new Point3(0, 0, 0);
-        this.horizontal = new Vec3(viewportWidth, 0, 0);
-        this.vertical = new Vec3(0, viewportHeight, 0);
+        // https://raytracing.github.io/images/fig-1.16-cam-view-up.jpg
+        Vec3 w = Vec3.unitVector(Vec3.sub(lookFrom, lookAt));
+        Vec3 u = Vec3.unitVector(Vec3.cross(viewUp, w));
+        Vec3 v = Vec3.cross(w, u);
 
-        // lowerLeftCorner = origin - horizontal/2 - vertical/2 - Vec3(0, 0, focalLength);
+        this.origin = lookFrom;
+        this.horizontal = Vec3.mul(u, viewportWidth);
+        this.vertical = Vec3.mul(v, viewportHeight);
+
+        // lowerLeftCorner = origin - horizontal/2 - vertical/2 - w;
         this.lowerLeftCorner = Vec3.sub(
             Vec3.sub(
                 Vec3.sub(
@@ -25,16 +33,16 @@ public class Camera {
                 ),
                 Vec3.div(this.vertical, 2)
             ),
-            new Vec3(0, 0, focalLength)
+            w
         );
     }
 
-    public Ray getRay(double u, double v) {
-        // return Ray(origin, lowerLeftCorner + u*horizontal + v*vertical - origin);
+    public Ray getRay(double s, double t) {
+        // return Ray(origin, lowerLeftCorner + s*horizontal + t*vertical - origin);
         return new Ray(this.origin,
             Vec3.add(
-                Vec3.add(this.lowerLeftCorner, Vec3.mul(this.horizontal, u)),
-                Vec3.sub(Vec3.mul(this.vertical, v), this.origin)
+                Vec3.add(this.lowerLeftCorner, Vec3.mul(this.horizontal, s)),
+                Vec3.sub(Vec3.mul(this.vertical, t), this.origin)
             )
         );
     }
