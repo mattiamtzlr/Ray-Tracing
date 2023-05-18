@@ -2,11 +2,15 @@ package com.raytracing;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 
 public class Main {
     public static void main(String[] args) {
+        Instant start = Instant.now();
+
         // render boolean => true for a good render
-        boolean render = true;
+        boolean render = false;
 
         // image properties
         final double aspectRatio = (double) 16 / 9;
@@ -57,7 +61,27 @@ public class Main {
             
             writer.write(output.toString());
             writer.close();
-            System.out.printf("\nSuccessfully wrote to '%s'.\n", fileName);
+
+            Instant finish = Instant.now();
+            Duration timeElapsedRaw = Duration.between(start, finish);
+
+            long timeElapsed;
+            String timeScale;
+
+            if (timeElapsedRaw.toMinutes() > 1) {
+                timeElapsed = timeElapsedRaw.toMinutes();
+                timeScale = "minutes";
+
+            } else if (timeElapsedRaw.toSeconds() > 1) {
+                timeElapsed = timeElapsedRaw.toSeconds();
+                timeScale = "seconds";
+
+            } else {
+                timeElapsed = timeElapsedRaw.toMillis();
+                timeScale = "milliseconds";
+            }
+
+            System.out.printf("\nSuccessfully wrote to '%s' in %d %s.\n", fileName, timeElapsed, timeScale);
 
         } catch (IOException e) {
             System.out.printf("Error while writing to '%s'.\n", fileName);
