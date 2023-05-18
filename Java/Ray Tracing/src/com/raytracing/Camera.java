@@ -1,7 +1,5 @@
 package com.raytracing;
 
-import java.awt.*;
-
 public class Camera {
     private final Point3 origin;
     private final Vec3 horizontal;
@@ -35,7 +33,7 @@ public class Camera {
         this.horizontal = Vec3.mul(this.u, viewportWidth * focusDist);
         this.vertical = Vec3.mul(this.v, viewportHeight * focusDist);
 
-        // lowerLeftCorner = origin - horizontal/2 - vertical/2 - w;
+        // lowerLeftCorner = origin - horizontal/2 - vertical/2 - w * focusDist;
         this.lowerLeftCorner = Vec3.sub(
             Vec3.sub(
                 Vec3.sub(

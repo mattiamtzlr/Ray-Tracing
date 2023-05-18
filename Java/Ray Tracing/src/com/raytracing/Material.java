@@ -61,6 +61,7 @@ class Dielectric extends Material {
         this.albedo = new Color(1, 1, 1);
     }
 
+    // overloading to allow colored spheres
     public Dielectric(double ir, Color albedo) {
         this.ir = ir;
         this.albedo = albedo;
