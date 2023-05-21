@@ -8,6 +8,7 @@ public class Camera {
     private final Vec3 u;
     private final Vec3 v;
     private final double lensRadius;
+    private final double time0, time1;
 
     public Camera(
         Point3 lookFrom,
@@ -16,7 +17,9 @@ public class Camera {
         double vFOV, // vertical FOV
         double aspectRatio,
         double aperture,
-        double focusDist
+        double focusDist,
+        double time0,
+        double time1
     ) {
 
         double theta = Utility.degToRad(vFOV); // angle between z plane and viewing vector
@@ -46,6 +49,8 @@ public class Camera {
         );
 
         this.lensRadius = aperture / 2;
+        this.time0 = time0;
+        this.time1 = time1;
     }
 
     public Ray getRay(double s, double t) {
@@ -59,7 +64,8 @@ public class Camera {
         /*  equals
             return Ray(
                 origin + offset,
-                lowerLeftCorner + s*horizontal + t*vertical - origin - offset
+                lowerLeftCorner + s*horizontal + t*vertical - origin - offset,
+                randomDouble(time0, time1)
             ); */
         return new Ray(
             Vec3.add(this.origin, offset).toPoint3(),
@@ -69,7 +75,8 @@ public class Camera {
                     Vec3.sub(Vec3.mul(this.vertical, t), this.origin),
                     offset
                 )
-            )
+            ),
+            Utility.randomDouble(this.time0, this.time1)
         );
     }
 }

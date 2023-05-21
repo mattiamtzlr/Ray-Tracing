@@ -25,6 +25,7 @@ class Lambertian extends Material {
 
         scattered.setOrigin(rec.getP());
         scattered.setDirection(scatterDirection);
+        scattered.setTime(rIn.getTime());
 
         attenuation.set(this.albedo);
         return true;
@@ -46,6 +47,7 @@ class Metal extends Material {
 
         scattered.setOrigin(rec.getP());
         scattered.setDirection(Vec3.add(reflected, Vec3.mul(Vec3.randomInUnitSphere(), this.fuzz)));
+        scattered.setTime(rIn.getTime());
 
         attenuation.set(this.albedo);
         return (Vec3.dot(scattered.getDirection(), rec.getNormal()) > 0);
@@ -89,6 +91,7 @@ class Dielectric extends Material {
 
         scattered.setOrigin(rec.getP());
         scattered.setDirection(direction);
+        scattered.setTime(rIn.getTime());
         return true;
     }
 

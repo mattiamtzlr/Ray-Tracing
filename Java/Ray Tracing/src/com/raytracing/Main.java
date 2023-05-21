@@ -4,36 +4,77 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Instant start = Instant.now();
 
+        Scanner bob = new Scanner(System.in);
+
         // render boolean => true for a good render
-        boolean render = false;
+        boolean dev = false;
 
         // image properties
         final double aspectRatio = (double) 16 / 9;
-        final int imageWidth = render ? 1000 : 400;
+
+        final int imageWidth;
+        if (dev) {
+            imageWidth = 400;
+        } else {
+            System.out.print("Image Width: ");
+            imageWidth = bob.nextInt();
+        }
         final int imageHeight = (int) (imageWidth / aspectRatio);
-        final int samplesPerPixel = render ? 75 : 5;
-        final int maxDepth = 200;
+
+        final int samplesPerPixel;
+        if (dev) {
+            samplesPerPixel = 5;
+        } else {
+            System.out.print("Samples per Pixel: ");
+            samplesPerPixel = bob.nextInt();
+        }
+
+        final int maxDepth = 100;
 
         // world
-        HittableList world = generateScene(false);
+        HittableList world = new HittableList();
 
-        Material randomMat = new Lambertian(Vec3.random(0.2, 0.8).toColor());
-        world.add(new Sphere(new Point3(2, 1, 3), 0.5, randomMat));
+        // ground
+        Material groundMaterial = new Lambertian(Utility.strToColor("40, 52, 66"));
+        world.add(new Sphere(new Point3(0, -1000, 0), 1000, groundMaterial));
+
+        // moving sphere
+        Material randomMat = new Lambertian(Utility.strToColor("231, 122, 255"));
+        world.add(new MovingSphere(
+            new Point3(3, 0.6, 3),
+            new Point3(3, 1.1, 3),
+            0,
+            1,
+            .4,
+            randomMat));
+
+        // standard spheres
+        Material material1 = new Dielectric( 1.5, Utility.strToColor("255, 150, 150"));
+        Material material2 = new Lambertian(Utility.strToColor("71, 160, 255"));
+        Material material3 = new Metal(Utility.strToColor("255, 174, 60"), 0.01);
+
+        world.add(new Sphere(new Point3(0, 1, 0), 1, material1));
+        world.add(new Sphere(new Point3(0, 1, 0), -0.9, material1));
+        world.add(new Sphere(new Point3(-4, 1, 0), 1, material2));
+        world.add(new Sphere(new Point3(4, 1, 0), 1, material3));
 
         // camera
-        Point3 lookFrom = new Point3(12, 2, 4);
-        Point3 lookAt = new Point3(0, 0.25, 0);
+        Point3 lookFrom = new Point3(13, 2.2, 4);
+        Point3 lookAt = new Point3(0, 0.4, 0);
         Vec3 viewUp = new Vec3(0, 1, 0); // horizontally level view
 
         double aperture = 0.1;
         double distToFocus = Vec3.sub(lookFrom, lookAt).length();
 
-        Camera cam = new Camera(lookFrom, lookAt, viewUp, 20, aspectRatio, aperture, distToFocus);
+        Camera cam = new Camera(
+            lookFrom, lookAt, viewUp, 20, aspectRatio, aperture, distToFocus, 0, 1
+        );
 
         // render to ppm image format
         String fileName = "output.ppm";
@@ -110,8 +151,8 @@ public class Main {
         double t = 0.5 * (unitDirection.y() + 1);
         // return (1 - t) * Color(1, 1, 1) + t * Color(0.5, 0.7, 1.0)
         return Vec3.add(
-            Vec3.mul(Utility.strToColor("238, 192, 252"), (1 - t)),
-            Vec3.mul(new Color(0.5, 0.7, 1), t)
+            Vec3.mul(Utility.strToColor("135, 188, 237"), (1 - t)),
+            Vec3.mul(new Color(1, 1, 1), t)
         ).toColor();
     }
 
@@ -137,56 +178,41 @@ public class Main {
         );
     }
 
-    private static HittableList generateScene(boolean smallSpheres) {
+    private static HittableList generateSmallSpheres() {
         HittableList world = new HittableList();
 
-        Material groundMaterial = new Lambertian(Utility.strToColor("61, 67, 74"));
-        world.add(new Sphere(new Point3(0, -1000, 0), 1000, groundMaterial));
+        int constraint = 14;
 
-        if (smallSpheres) {
-            int constraint = 14;
+        for (int a = -constraint; a < constraint; a++) {
+            for (int b = -constraint; b < constraint; b++) {
+                double chooseMat = Utility.randomDouble();
+                Point3 center = new Point3(a + (0.9 * Utility.randomDouble()), 0.2, b + (0.9 * Utility.randomDouble()));
 
-            for (int a = -constraint; a < constraint; a++) {
-                for (int b = -constraint; b < constraint; b++) {
-                    double chooseMat = Utility.randomDouble();
-                    Point3 center = new Point3(a + (0.9 * Utility.randomDouble()), 0.2, b + (0.9 * Utility.randomDouble()));
+                if (Vec3.sub(center, new Point3(4, 0.2, 0)).length() > 0.9) {
+                    Material sphereMat;
 
-                    if (Vec3.sub(center, new Point3(4, 0.2, 0)).length() > 0.9) {
-                        Material sphereMat;
+                    if (chooseMat < 0.6) {
+                        // diffuse
+                        Color albedo = Vec3.random(0.1, 0.9).toColor();
+                        sphereMat = new Lambertian(albedo);
+                        world.add(new Sphere(center, 0.2, sphereMat));
 
-                        if (chooseMat < 0.6) {
-                            // diffuse
-                            Color albedo = Vec3.random(0.1, 0.9).toColor();
-                            sphereMat = new Lambertian(albedo);
-                            world.add(new Sphere(center, 0.2, sphereMat));
+                    } else if (chooseMat < 0.8) {
+                        // metal
+                        Color albedo = Vec3.random(0.5, 1).toColor();
+                        double fuzz = Utility.randomDouble(0, 0.5);
+                        sphereMat = new Metal(albedo, fuzz);
+                        world.add(new Sphere(center, 0.2, sphereMat));
 
-                        } else if (chooseMat < 0.8) {
-                            // metal
-                            Color albedo = Vec3.random(0.5, 1).toColor();
-                            double fuzz = Utility.randomDouble(0, 0.5);
-                            sphereMat = new Metal(albedo, fuzz);
-                            world.add(new Sphere(center, 0.2, sphereMat));
-
-                        } else {
-                            // glass
-                            Color albedo = Vec3.random(0.5, 1).toColor();
-                            sphereMat = new Dielectric(1.5, albedo);
-                            world.add(new Sphere(center, 0.2, sphereMat));
-                        }
+                    } else {
+                        // glass
+                        Color albedo = Vec3.random(0.5, 1).toColor();
+                        sphereMat = new Dielectric(1.5, albedo);
+                        world.add(new Sphere(center, 0.2, sphereMat));
                     }
                 }
             }
         }
-
-        Material material1 = new Dielectric( 1.5, Utility.strToColor("255, 150, 150"));
-        Material material2 = new Lambertian(Utility.strToColor("71, 160, 255"));
-        Material material3 = new Metal(Utility.strToColor("255, 174, 60"), 0.01);
-
-        world.add(new Sphere(new Point3(0, 1, 0), 1, material1));
-        world.add(new Sphere(new Point3(0, 1, 0), -0.9, material1));
-        world.add(new Sphere(new Point3(-4, 1, 0), 1, material2));
-        world.add(new Sphere(new Point3(4, 1, 0), 1, material3));
-
         return world;
     }
 
