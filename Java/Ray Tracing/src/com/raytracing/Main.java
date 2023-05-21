@@ -16,11 +16,14 @@ public class Main {
         final double aspectRatio = (double) 16 / 9;
         final int imageWidth = render ? 1000 : 400;
         final int imageHeight = (int) (imageWidth / aspectRatio);
-        final int samplesPerPixel = render ? 50 : 5;
-        final int maxDepth = render ? 50 : 10;
+        final int samplesPerPixel = render ? 75 : 5;
+        final int maxDepth = 200;
 
         // world
-        HittableList world = generateScene(true);
+        HittableList world = generateScene(false);
+
+        Material randomMat = new Lambertian(Vec3.random(0.2, 0.8).toColor());
+        world.add(new Sphere(new Point3(2, 1, 3), 0.5, randomMat));
 
         // camera
         Point3 lookFrom = new Point3(12, 2, 4);
@@ -63,25 +66,19 @@ public class Main {
             writer.close();
 
             Instant finish = Instant.now();
-            Duration timeElapsedRaw = Duration.between(start, finish);
+            double timeElapsed = Duration.between(start, finish).toMillis();
+            String timeScale = "milliseconds";
 
-            long timeElapsed;
-            String timeScale;
-
-            if (timeElapsedRaw.toMinutes() > 1) {
-                timeElapsed = timeElapsedRaw.toMinutes();
-                timeScale = "minutes";
-
-            } else if (timeElapsedRaw.toSeconds() > 1) {
-                timeElapsed = timeElapsedRaw.toSeconds();
+            if (timeElapsed > 1000) {
+                timeElapsed = timeElapsed / 1000;
                 timeScale = "seconds";
-
-            } else {
-                timeElapsed = timeElapsedRaw.toMillis();
-                timeScale = "milliseconds";
+            }
+            if (timeElapsed > 60 && timeScale.equals("seconds")) {
+                timeElapsed = timeElapsed / 60;
+                timeScale = "minutes";
             }
 
-            System.out.printf("\nSuccessfully wrote to '%s' in %d %s.\n", fileName, timeElapsed, timeScale);
+            System.out.printf("\nSuccessfully wrote to '%s' in %.2f %s.\n", fileName, timeElapsed, timeScale);
 
         } catch (IOException e) {
             System.out.printf("Error while writing to '%s'.\n", fileName);
@@ -109,7 +106,7 @@ public class Main {
         }
 
         // if the ray doesn't intersect anything, color the sky normally
-        Vec3 unitDirection = Vec3.unitVector(r.direction());
+        Vec3 unitDirection = Vec3.unitVector(r.getDirection());
         double t = 0.5 * (unitDirection.y() + 1);
         // return (1 - t) * Color(1, 1, 1) + t * Color(0.5, 0.7, 1.0)
         return Vec3.add(

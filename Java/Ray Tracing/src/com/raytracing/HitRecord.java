@@ -21,7 +21,7 @@ public class HitRecord {
     }
 
     public void setFaceNormal(Ray r, Vec3 outwardNormal) {
-        this.frontFace = Vec3.dot(r.direction(), outwardNormal) < 0;
+        this.frontFace = Vec3.dot(r.getDirection(), outwardNormal) < 0;
         this.normal = this.frontFace ? outwardNormal : outwardNormal.negate();
     }
 

@@ -42,13 +42,13 @@ class Metal extends Material {
 
     @Override
     public boolean scatter(Ray rIn, HitRecord rec, Color attenuation, Ray scattered) {
-        Vec3 reflected = Vec3.reflect(Vec3.unitVector(rIn.direction()), rec.getNormal());
+        Vec3 reflected = Vec3.reflect(Vec3.unitVector(rIn.getDirection()), rec.getNormal());
 
         scattered.setOrigin(rec.getP());
         scattered.setDirection(Vec3.add(reflected, Vec3.mul(Vec3.randomInUnitSphere(), this.fuzz)));
 
         attenuation.set(this.albedo);
-        return (Vec3.dot(scattered.direction(), rec.getNormal()) > 0);
+        return (Vec3.dot(scattered.getDirection(), rec.getNormal()) > 0);
     }
 }
 
@@ -73,7 +73,7 @@ class Dielectric extends Material {
         attenuation.set(this.albedo);
         double refractionRatio = rec.isFrontFace() ? (1 / this.ir) : this.ir;
 
-        Vec3 unitDirection = Vec3.unitVector(rIn.direction());
+        Vec3 unitDirection = Vec3.unitVector(rIn.getDirection());
         // only refract if possible, meaning as long as not inside the sphere
         double cosTheta = Math.min(Vec3.dot(unitDirection.negate(), rec.getNormal()), 1);
         double sinTheta = Math.sqrt(1 - cosTheta * cosTheta);

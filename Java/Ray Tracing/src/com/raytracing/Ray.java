@@ -17,11 +17,11 @@ public class Ray {
         this.direction = direction;
     }
 
-    public Point3 origin() {
+    public Point3 getOrigin() {
         return origin;
     }
 
-    public Vec3 direction() {
+    public Vec3 getDirection() {
         return direction;
     }
 

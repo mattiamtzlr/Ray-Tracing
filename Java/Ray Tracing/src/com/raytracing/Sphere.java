@@ -14,9 +14,9 @@ public class Sphere implements Hittable {
 
     @Override
     public boolean hit(Ray r, double tMin, double tMax, HitRecord rec) {
-        Vec3 oc = Vec3.sub(r.origin(), this.center);
-        double a = r.direction().lengthSquared();
-        double h = Vec3.dot(oc, r.direction());
+        Vec3 oc = Vec3.sub(r.getOrigin(), this.center);
+        double a = r.getDirection().lengthSquared();
+        double h = Vec3.dot(oc, r.getDirection());
         double c = oc.lengthSquared() - (this.radius * this.radius);
 
         // value under sqrt, if > 0 => ray intersects
