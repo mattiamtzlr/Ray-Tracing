@@ -10,3 +10,9 @@ At the time of writing this (18.05.2023), I have finished the first book in the 
 Sadly the ray tracer is again really slow when rendering with high-quality settings. In low-quality and with a small image size it runs quite fast, though.
 
 I saved some images of the progress of the ray tracer in the `/images` directory. The name of the image corresponds to the chapter, after which I generated that image.
+
+## Notes / Remarks
+Some notes and remarks to different chapters or changes.
+
+### Image to Chapter 2.3
+It appears as if nothing much has changed between this image and the ones for the to previous chapters, however thanks to the implementation of Bounding Volume Hierarchies the rendering was done about 4 times faster, even with more spheres than before.
