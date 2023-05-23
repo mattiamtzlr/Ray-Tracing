@@ -3,9 +3,9 @@ package com.raytracing;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HittableList implements Hittable{
+public class HittableList implements Hittable {
     // class for a list containing all hittable objects in the scene.
-    private List<Hittable> objects;
+    private final List<Hittable> objects;
 
     public HittableList() {
         this.objects = new ArrayList<>();
@@ -27,9 +27,14 @@ public class HittableList implements Hittable{
         this.objects.add(object);
     }
 
+    public List<Hittable> getObjects() {
+        return this.objects;
+    }
+
     // hit method loops through all objects and tests if they are hit by the ray.
     // to save time it sets the closest t value to avoid searching behind already hit objects
     @Override
+
     public boolean hit(Ray r, double tMin, double tMax, HitRecord rec) {
         HitRecord tempRec = new HitRecord();
         boolean hitAnything = false;
@@ -48,5 +53,21 @@ public class HittableList implements Hittable{
         }
 
         return hitAnything;
+    }
+
+    @Override
+    public boolean boundingBox(double time0, double time1, AABB outputBox) {
+        if (objects.isEmpty()) return false;
+
+        AABB tempBox = new AABB();
+        boolean firstBox = true;
+
+        for (Hittable object : objects) {
+            if (!object.boundingBox(time0, time1, tempBox)) return false;
+            outputBox.set(firstBox ? tempBox : AABB.surroundingBox(outputBox, tempBox));
+            firstBox = false;
+        }
+
+        return true;
     }
 }

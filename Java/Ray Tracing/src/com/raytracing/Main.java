@@ -12,8 +12,8 @@ public class Main {
 
         Scanner bob = new Scanner(System.in);
 
-        // render boolean => true for a good render
-        boolean dev = false;
+        // dev boolean => set to false when rendering high quality
+        boolean dev = true;
 
         // image properties
         final double aspectRatio = (double) 16 / 9;
@@ -40,11 +40,14 @@ public class Main {
         // world
         HittableList world = new HittableList();
 
+        BHVNode smallSpheres = new BHVNode(generateSmallSpheres(), 0, 1);
+        world.add(smallSpheres);
+
         // ground
         Material groundMaterial = new Lambertian(Utility.strToColor("40, 52, 66"));
         world.add(new Sphere(new Point3(0, -1000, 0), 1000, groundMaterial));
 
-        // moving sphere
+        /* moving sphere
         Material randomMat = new Lambertian(Utility.strToColor("231, 122, 255"));
         world.add(new MovingSphere(
             new Point3(3, 0.6, 3),
@@ -53,6 +56,7 @@ public class Main {
             1,
             .4,
             randomMat));
+        */
 
         // standard spheres
         Material material1 = new Dielectric( 1.5, Utility.strToColor("255, 150, 150"));
@@ -181,12 +185,12 @@ public class Main {
     private static HittableList generateSmallSpheres() {
         HittableList world = new HittableList();
 
-        int constraint = 14;
+        int constraint = 18;
 
         for (int a = -constraint; a < constraint; a++) {
             for (int b = -constraint; b < constraint; b++) {
                 double chooseMat = Utility.randomDouble();
-                Point3 center = new Point3(a + (0.9 * Utility.randomDouble()), 0.2, b + (0.9 * Utility.randomDouble()));
+                Point3 center = new Point3(a + (0.7 * Utility.randomDouble()), Utility.randomDouble(0.2, 0.4), b + (0.7 * Utility.randomDouble()));
 
                 if (Vec3.sub(center, new Point3(4, 0.2, 0)).length() > 0.9) {
                     Material sphereMat;

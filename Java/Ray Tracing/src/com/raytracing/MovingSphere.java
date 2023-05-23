@@ -62,4 +62,21 @@ public class MovingSphere implements Hittable {
             )
         ).toPoint3();
     }
+
+    @Override
+    public boolean boundingBox(double time0, double time1, AABB outputBox) {
+        AABB box0 = new AABB(
+            Vec3.sub(center(time0), new Vec3(radius, radius, radius)).toPoint3(),
+            Vec3.add(center(time0), new Vec3(radius, radius, radius)).toPoint3()
+        );
+
+        AABB box1 = new AABB(
+            Vec3.sub(center(time1), new Vec3(radius, radius, radius)).toPoint3(),
+            Vec3.add(center(time1), new Vec3(radius, radius, radius)).toPoint3()
+        );
+
+        outputBox.set(AABB.surroundingBox(box0, box1));
+
+        return true;
+    }
 }

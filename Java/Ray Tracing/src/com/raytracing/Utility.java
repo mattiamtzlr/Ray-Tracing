@@ -21,6 +21,11 @@ public class Utility {
         return min + (max - min) * random.nextDouble();
     }
 
+    public static int randomInt(int min, int max) {
+        // returns a random integer in [min, max]
+        return (int) randomDouble(min, max + 1);
+    }
+
     public static double clamp(double x, double min, double max) {
         // Clamps x between min and max, if outside the range, the return value is min or max respectively.
         return Math.min(Math.max(x, min), max);

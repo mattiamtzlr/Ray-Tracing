@@ -5,4 +5,5 @@ public interface Hittable {
     // must implement a hit method as described below
 
     boolean hit(Ray r, double tMin, double tMax, HitRecord rec);
+    boolean boundingBox(double time0, double time1, AABB outputBox);
 }

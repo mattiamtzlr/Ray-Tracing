@@ -44,4 +44,13 @@ public class Sphere implements Hittable {
 
         return true;
     }
+
+    @Override
+    public boolean boundingBox(double time0, double time1, AABB outputBox) {
+        // bounding box for a sphere is really easy => one "corner" to the diagonal "corner"
+        outputBox.setMinimum(Vec3.sub(this.center, new Vec3(radius, radius, radius)).toPoint3());
+        outputBox.setMaximum(Vec3.add(this.center, new Vec3(radius, radius, radius)).toPoint3());
+
+        return true;
+    }
 }
