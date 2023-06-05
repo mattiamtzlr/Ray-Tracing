@@ -35,15 +35,36 @@ public class Utility {
      * Returns a com.raytracing.Color object of the provided color in string format
      *
      * @param color a color in string format: "r, g, b"
-     * @return a Color object with values between 0 and 1
+     * @return a com.raytracing.Color object with values between 0 and 1
      */
-    public static Color strToColor(String color) {
-        String[] colorArray = color.split(",");
+    public static Color rgbToColor(String color) {
+        String[] colorArray = color.strip().split(",");
+
 
         Color output = new Color();
         for (int i = 0; i < colorArray.length; i++) {
             output.setComp(i, Double.parseDouble(colorArray[i]) / 255);
         }
         return output;
+    }
+
+    /**
+     * Returns a com.raytracing.Color object of the provided color in string format
+     * @param color a color in hex format: #rrggbb
+     * @return a com.raytracing.Color object with values between 0 and 1
+     */
+    public static Color hexToColor(String color) {
+        color = color.strip();
+        assert color.length() == 7;
+
+        String rHex = color.substring(1, 3);
+        String gHex = color.substring(3, 5);
+        String bHex = color.substring(5, 7);
+
+        return new Color(
+            (double) Integer.parseInt(rHex, 16) / 255,
+            (double) Integer.parseInt(gHex, 16) / 255,
+            (double) Integer.parseInt(bHex, 16) / 255
+        );
     }
 }
