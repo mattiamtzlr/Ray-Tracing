@@ -6,9 +6,13 @@ public abstract class Material {
 
 class Lambertian extends Material {
     // lambertian (diffuse) material
-    public Color albedo;
+    public Texture albedo;
 
     public Lambertian(Color albedo) {
+        this.albedo = new SolidColor(albedo);
+    }
+
+    public Lambertian(Texture albedo) {
         this.albedo = albedo;
     }
 
@@ -27,7 +31,7 @@ class Lambertian extends Material {
         scattered.setDirection(scatterDirection);
         scattered.setTime(rIn.getTime());
 
-        attenuation.set(this.albedo);
+        attenuation.set(this.albedo.value(rec.getU(), rec.getV(), rec.getP()));
         return true;
     }
 }

@@ -2,20 +2,23 @@ package com.raytracing;
 
 public class HitRecord {
     // HitRecord class: keeps track of elements that ray intersects with
-
     private Point3 p;
     private Vec3 normal;
 
     private Material material;
     private double t;
+    // u, v surface coordinates for textures
+    private double u;
+    private double v;
     private boolean frontFace;
-
 
     public HitRecord() {
         this.p = null;
         this.normal = null;
         this.material = null;
         this.t = 0;
+        this.u = 0;
+        this.v = 0;
         this.frontFace = false;
 
     }
@@ -25,6 +28,7 @@ public class HitRecord {
         this.normal = this.frontFace ? outwardNormal : outwardNormal.negate();
     }
 
+    // setters
     public void setP(Point3 p) {
         this.p = p;
     }
@@ -37,10 +41,17 @@ public class HitRecord {
     public void setT(double t) {
         this.t = t;
     }
+    public void setU(double u) {
+        this.u = u;
+    }
+    public void setV(double v) {
+        this.v = v;
+    }
     public void setFrontFace(boolean frontFace) {
         this.frontFace = frontFace;
     }
 
+    // getters
     public Point3 getP() {
         return p;
     }
@@ -52,6 +63,12 @@ public class HitRecord {
     }
     public double getT() {
         return t;
+    }
+    public double getU() {
+        return u;
+    }
+    public double getV() {
+        return v;
     }
     public boolean isFrontFace() {
         return frontFace;

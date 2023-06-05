@@ -37,10 +37,13 @@ public class Sphere implements Hittable {
 
         rec.setT(root);
         rec.setP(r.at(rec.getT()));
-        rec.setMaterial(this.material);
+
         // normal = (rec.p - center) / radius
         Vec3 outwardNormal = Vec3.div(Vec3.sub(rec.getP(), this.center), radius);
         rec.setFaceNormal(r, outwardNormal);
+
+        getSphereUV(outwardNormal.toPoint3(), rec.getU(), rec.getV());
+        rec.setMaterial(this.material);
 
         return true;
     }
@@ -52,5 +55,28 @@ public class Sphere implements Hittable {
         outputBox.setMaximum(Vec3.add(this.center, new Vec3(radius, radius, radius)).toPoint3());
 
         return true;
+    }
+
+    /**
+     * Calculates (u,v) coordinates of a given point on a sphere
+     * @param p a given point on the sphere of radius one, centered at the origin.
+     * @param u returned value [0,1] of angle around the Y axis from X=-1.
+     * @param v returned value [0,1] of angle from Y=-1 to Y=+1.
+     */
+    public static void getSphereUV(Point3 p, double u, double v) {
+        /*
+         p: a given point on the sphere of radius one, centered at the origin.
+         u: returned value [0,1] of angle around the Y axis from X=-1.
+         v: returned value [0,1] of angle from Y=-1 to Y=+1.
+             <1 0 0> yields <0.50 0.50>       <-1  0  0> yields <0.00 0.50>
+             <0 1 0> yields <0.50 1.00>       < 0 -1  0> yields <0.50 0.00>
+             <0 0 1> yields <0.25 0.50>       < 0  0 -1> yields <0.75 0.50>
+        */
+
+        double theta = Math.acos(p.negate().y());
+        double phi = Math.atan2(p.negate().z(), p.x()) + Utility.Pi;
+
+        u = phi / (2 * Utility.Pi);
+        v = theta / phi;
     }
 }
