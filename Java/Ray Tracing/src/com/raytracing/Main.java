@@ -46,7 +46,7 @@ public class Main {
         int vFOV;
         double aperture = 0;
 
-        switch (0) {
+        switch (3) {
             case 1:
                 world.add(Scenes.smallSpheres());
                 lookFrom = new Point3(13, 2.2, 4);
@@ -55,10 +55,17 @@ public class Main {
                 break;
 
             case 2:
-                world.add(Scenes.twoSpheres());
+                world.add(Scenes.checkeredSpheres());
                 lookFrom = new Point3(13, 2, 3);
                 lookAt = new Point3(0, 0, 0);
                 vFOV = 30;
+                break;
+
+            case 3:
+                world.add(Scenes.perlinSphere());
+                lookFrom = new Point3(2, 3, 5);
+                lookAt = new Point3(0, 2, 0);
+                vFOV = 60;
                 break;
 
             default:

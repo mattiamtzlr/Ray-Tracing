@@ -76,7 +76,7 @@ public class Scenes {
     }
 
     // ------------------------------------------------------------------------------ two checkered spheres
-    public static HittableList twoSpheres() {
+    public static HittableList checkeredSpheres() {
         HittableList objects = new HittableList();
 
         Material checker1 = new Lambertian(new CheckerTexture(
@@ -88,6 +88,20 @@ public class Scenes {
 
         objects.add(new Sphere(new Point3(0, -10, 0), 10, checker1));
         objects.add(new Sphere(new Point3(0, 10, 0), 10, checker2));
+
+        return objects;
+    }
+
+    public static HittableList perlinSphere() {
+        HittableList objects = new HittableList();
+
+        Texture perlinTexture = new NoiseTexture(5);
+        Texture checkerTexture = new CheckerTexture(
+            Utility.hexToColor("#2c2c2c"), Utility.hexToColor("#4a4a4a")
+        );
+
+        objects.add(new Sphere(new Point3(0, -1000, 0), 1000, new Lambertian(checkerTexture)));
+        objects.add(new Sphere(new Point3(0, 2, 0), 2, new Lambertian(perlinTexture)));
 
         return objects;
     }
