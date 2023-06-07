@@ -14,5 +14,15 @@ I saved some images of the progress of the ray tracer in the `/images` directory
 ## Notes / Remarks
 Some notes and remarks to different chapters or changes.
 
+### Coordinate System
+As the position of the viewpoint and everything that needs to be rendered has to be hardocoded, it is important to understand how the coordinate system used works.
+To help understand see the image below:  
+
+![coordinate system](./coord_system.png)
+
+The example on the right shows a sphere (red) at the coordinates (2, 1, 1).  
+To capture this sphere from the front the viewpoint needs to be "in front" of the sphere, meaning itss z-coordinate needs to be bigger, thus its coordinates are (2, 1, 5).  
+The point that the camera looks at from the viewpoint is "behind" the sphere at (2, 1, 0) (on the x/y-plane).
+
 ### Image for Chapter 2.3
 It appears as if nothing much has changed between this image and the ones for the to previous chapters, however thanks to the implementation of Bounding Volume Hierarchies the rendering was done about 4 times faster, even with more spheres than before.
