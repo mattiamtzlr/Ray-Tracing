@@ -62,10 +62,10 @@ public class Main {
                 break;
 
             case 3:
-                world.add(Scenes.perlinSphere());
-                lookFrom = new Point3(2, 3, 5);
-                lookAt = new Point3(0, 2, 0);
-                vFOV = 60;
+                world.add(Scenes.perlinSpheres());
+                lookFrom = new Point3(4, 4, 10);
+                lookAt = new Point3(0, 1.8, -2.5);
+                vFOV = 40;
                 break;
 
             default:

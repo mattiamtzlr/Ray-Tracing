@@ -92,16 +92,21 @@ public class Scenes {
         return objects;
     }
 
-    public static HittableList perlinSphere() {
+    public static HittableList perlinSpheres() {
         HittableList objects = new HittableList();
 
-        Texture perlinTexture = new NoiseTexture(5);
+        Texture perlin1 = new NoiseTexture(5);
+        Texture perlin2 = new NoiseTexture(Utility.hexToColor("#cf6a5d"), 3);
+        Texture perlin3 = new NoiseTexture(Utility.hexToColor("#7fcf5d"), 12);
+
         Texture checkerTexture = new CheckerTexture(
             Utility.hexToColor("#2c2c2c"), Utility.hexToColor("#4a4a4a")
         );
 
         objects.add(new Sphere(new Point3(0, -1000, 0), 1000, new Lambertian(checkerTexture)));
-        objects.add(new Sphere(new Point3(0, 2, 0), 2, new Lambertian(perlinTexture)));
+        objects.add(new Sphere(new Point3(0, 2, 0), 2, new Lambertian(perlin1)));
+        objects.add(new Sphere(new Point3(-5, 4.3, -1), 1.1, new Lambertian(perlin2)));
+        objects.add(new Sphere(new Point3(4, 1.2, 1), 1.3, new Lambertian(perlin3)));
 
         return objects;
     }
