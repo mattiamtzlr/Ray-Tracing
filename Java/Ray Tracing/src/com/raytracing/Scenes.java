@@ -113,10 +113,17 @@ public class Scenes {
         return objects;
     }
 
-    public static Hittable earth() {
+    public static HittableList earth() {
+        HittableList objects = new HittableList();
+
         Texture earthTexture = new ImageTexture("textures/earthmap.jpg");
         Material earthMat = new Lambertian(earthTexture);
+        objects.add(new Sphere(new Point3(0, 0, 0), 2, earthMat));
 
-        return new Sphere(new Point3(0, 0, 0), 2, earthMat);
+        Texture moonTexture = new ImageTexture("textures/moonmap.jpg");
+        Material moonMat = new Lambertian(moonTexture);
+        objects.add(new Sphere(new Point3(2, 1.5, -3.2), .5, moonMat));
+
+        return objects;
     }
 }

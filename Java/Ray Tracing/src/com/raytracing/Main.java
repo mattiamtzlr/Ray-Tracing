@@ -70,9 +70,9 @@ public class Main {
 
             case 4:
                 world.add(Scenes.earth());
-                lookFrom = new Point3(5, 2.5, -1);
-                lookAt = new Point3(0, 0, 0);
-                vFOV = 50;
+                lookFrom = new Point3(5, 2, -1);
+                lookAt = new Point3(0, 0, -1.5);
+                vFOV = 60;
                 break;
 
             default:
