@@ -37,11 +37,16 @@ class Lambertian extends Material {
 }
 
 class Metal extends Material {
-    public Color albedo;
+    public Texture albedo;
     public double fuzz; // makes fuzzy reflections by choosing the endpoint of the ray randomly in a small sphere
 
     public Metal(Color albedo, double fuzz) {
-        this.albedo = albedo;
+        this.albedo = new SolidColor(albedo);
+        this.fuzz = (fuzz < 1) ? fuzz : 1;
+    }
+
+    public Metal(Texture texture, double fuzz) {
+        this.albedo = texture;
         this.fuzz = (fuzz < 1) ? fuzz : 1;
     }
 
@@ -53,7 +58,7 @@ class Metal extends Material {
         scattered.setDirection(Vec3.add(reflected, Vec3.mul(Vec3.randomInUnitSphere(), this.fuzz)));
         scattered.setTime(rIn.getTime());
 
-        attenuation.set(this.albedo);
+        attenuation.set(this.albedo.value(rec.getU(), rec.getV(), rec.getP()));
         return (Vec3.dot(scattered.getDirection(), rec.getNormal()) > 0);
     }
 }
