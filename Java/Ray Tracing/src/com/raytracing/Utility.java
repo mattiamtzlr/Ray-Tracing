@@ -5,11 +5,11 @@ import java.util.Random;
 public class Utility {
     // Constants
     public static final double Infinity = Double.POSITIVE_INFINITY;
-    public static final double Pi = 3.1415926535897932385;
+    public static final double PI = 3.1415926535897932385;
 
     // Utility Functions
     public static double degToRad(double deg) {
-        return deg * Pi / 180;
+        return deg * PI / 180;
     }
 
     public static double randomDouble() {

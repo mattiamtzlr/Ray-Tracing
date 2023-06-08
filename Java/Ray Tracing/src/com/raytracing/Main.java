@@ -46,7 +46,7 @@ public class Main {
         int vFOV;
         double aperture = 0;
 
-        switch (3) {
+        switch (4) {
             case 1:
                 world.add(Scenes.smallSpheres());
                 lookFrom = new Point3(13, 2.2, 4);
@@ -66,6 +66,13 @@ public class Main {
                 lookFrom = new Point3(4, 4, 10);
                 lookAt = new Point3(0, 1.8, -2.5);
                 vFOV = 40;
+                break;
+
+            case 4:
+                world.add(Scenes.earth());
+                lookFrom = new Point3(5, 2.5, -1);
+                lookAt = new Point3(0, 0, 0);
+                vFOV = 50;
                 break;
 
             default:
@@ -159,7 +166,7 @@ public class Main {
         double t = 0.5 * (unitDirection.y() + 1);
         // return (1 - t) * Color(1, 1, 1) + t * Color(0.5, 0.7, 1.0)
         return Vec3.add(
-            Vec3.mul(Utility.rgbToColor("135, 188, 237"), (1 - t)),
+            Vec3.mul(Utility.hexToColor("#80d4ff"), (1 - t)),
             Vec3.mul(new Color(1, 1, 1), t)
         ).toColor();
     }

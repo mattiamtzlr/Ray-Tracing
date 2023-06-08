@@ -20,7 +20,6 @@ public class HitRecord {
         this.u = 0;
         this.v = 0;
         this.frontFace = false;
-
     }
 
     public void setFaceNormal(Ray r, Vec3 outwardNormal) {
@@ -29,6 +28,16 @@ public class HitRecord {
     }
 
     // setters
+    public void set(HitRecord hitRecord) { // complete setter UPDATE WHEN NEW FIELD
+        this.p = hitRecord.getP();
+        this.normal = hitRecord.getNormal();
+        this.material = hitRecord.getMaterial();
+        this.t = hitRecord.getT();
+        this.u = hitRecord.getU();
+        this.v = hitRecord.getV();
+        this.frontFace = hitRecord.isFrontFace();
+    }
+
     public void setP(Point3 p) {
         this.p = p;
     }

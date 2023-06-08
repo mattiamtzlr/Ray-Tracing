@@ -17,13 +17,15 @@ public class Scenes {
         Material material1 = new Dielectric( 1.5, Utility.rgbToColor("255, 150, 150"));
         Material material2 = new Lambertian(Utility.rgbToColor("71, 160, 255"));
         Material material3 = new Metal(Utility.rgbToColor("255, 174, 60"), 0.01);
-        Material material4 = new Lambertian(Utility.rgbToColor("231, 122, 255"));
+
+        Texture perlinMat4 = new NoiseTexture(Utility.rgbToColor("231, 122, 255"), 2);
+        Material material4 = new Metal(perlinMat4, 0);
 
         objects.add(new Sphere(new Point3(0, 1, 0), 1, material1));
         objects.add(new Sphere(new Point3(0, 1, 0), -0.9, material1));
         objects.add(new Sphere(new Point3(-4, 1, 0), 1, material2));
         objects.add(new Sphere(new Point3(4, 1, 0), 1, material3));
-        objects.add(new Sphere(new Point3(3, 0.6, 3), .4, material4));
+        objects.add(new Sphere(new Point3(3, 0.7, 3), .5, material4));
 
         return objects;
     }
@@ -109,5 +111,12 @@ public class Scenes {
         objects.add(new Sphere(new Point3(4, 1.2, 1), 1.3, new Lambertian(perlin3)));
 
         return objects;
+    }
+
+    public static Hittable earth() {
+        Texture earthTexture = new ImageTexture("textures/earthmap.jpg");
+        Material earthMat = new Lambertian(earthTexture);
+
+        return new Sphere(new Point3(0, 0, 0), 2, earthMat);
     }
 }

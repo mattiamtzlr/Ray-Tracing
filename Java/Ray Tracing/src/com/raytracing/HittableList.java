@@ -44,11 +44,7 @@ public class HittableList implements Hittable {
             if (object.hit(r, tMin, closest, tempRec)) {
                 hitAnything = true;
                 closest = tempRec.getT();
-                rec.setP(tempRec.getP());
-                rec.setT(tempRec.getT());
-                rec.setMaterial(tempRec.getMaterial());
-                rec.setNormal(tempRec.getNormal());
-                rec.setFrontFace(tempRec.isFrontFace());
+                rec.set(tempRec);
             }
         }
 
