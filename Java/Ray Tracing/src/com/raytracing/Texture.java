@@ -34,15 +34,32 @@ class SolidColor extends Texture {
 class CheckerTexture extends Texture {
     private final Texture odd;
     private final Texture even;
+    private final double size;
 
-    public CheckerTexture(Texture odd, Texture even) {
+    /**
+     * Constructs a checkered Texture made up of the two passed textures.
+     * @param odd a com.raytracing.Texture object
+     * @param even a com.raytracing.Texture object
+     * @param size double value to control the size of the squares in the checkered texture, the larger
+     *             this number the smaller the squares will be!
+     */
+    public CheckerTexture(Texture odd, Texture even, double size) {
         this.odd = odd;
         this.even = even;
+        this.size = size;
     }
 
-    public CheckerTexture(Color c1, Color c2) {
+    /**
+     * Constructs a checkered Texture made up of the two passed colors c1 and c2.
+     * @param c1 a com.raytracing.Color object
+     * @param c2 a com.raytracing.Color object
+     * @param size double value to control the size of the squares in the checkered texture, the larger
+     *             this number the smaller the squares will be!
+     */
+    public CheckerTexture(Color c1, Color c2, double size) {
         this.odd = new SolidColor(c1);
         this.even = new SolidColor(c2);
+        this.size = size;
     }
 
     @Override
@@ -53,7 +70,8 @@ class CheckerTexture extends Texture {
          a 3D checker pattern.
         */
 
-        double sines = Math.sin(10 * p.x()) * Math.sin(10 * p.y()) * Math.sin(10 * p.z());
+
+        double sines = Math.sin(size * p.x()) * Math.sin(size * p.y()) * Math.sin(size * p.z());
         if (sines < 0)
             return odd.value(u, v, p);
         else

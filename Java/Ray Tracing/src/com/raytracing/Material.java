@@ -2,6 +2,9 @@ package com.raytracing;
 
 public abstract class Material {
     public abstract boolean scatter(Ray rIn, HitRecord rec, Color attenuation, Ray scattered);
+    public Color emitted(double u, double v, Point3 p) {
+        return new Color(0, 0, 0);
+    }
 }
 
 class Lambertian extends Material {
@@ -109,5 +112,26 @@ class Dielectric extends Material {
         double r0 = (1 - refIdx) / (1 + refIdx);
         r0 = r0 * r0;
         return r0 + (1 - r0) * Math.pow((1 - cosine), 5);
+    }
+}
+
+class DiffuseLight extends Material {
+    private final Texture emit;
+
+    public DiffuseLight(Color color) {
+        this.emit = new SolidColor(color);
+    }
+    public DiffuseLight(Texture texture) {
+        this.emit = texture;
+    }
+
+    @Override
+    public boolean scatter(Ray rIn, HitRecord rec, Color attenuation, Ray scattered) {
+        return false;
+    }
+
+    @Override
+    public Color emitted(double u, double v, Point3 p) {
+        return emit.value(u, v, p);
     }
 }

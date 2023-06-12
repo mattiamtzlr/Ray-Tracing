@@ -13,7 +13,7 @@ public class Main {
         Scanner bob = new Scanner(System.in);
 
         // dev boolean => set to false when rendering high quality
-        boolean dev = false;
+        boolean dev = true;
 
         // image properties
         final double aspectRatio = (double) 16 / 9;
@@ -27,9 +27,9 @@ public class Main {
         }
         final int imageHeight = (int) (imageWidth / aspectRatio);
 
-        final int samplesPerPixel;
+        int samplesPerPixel;
         if (dev) {
-            samplesPerPixel = 5;
+            samplesPerPixel = 7;
         } else {
             System.out.print("Samples per Pixel: ");
             samplesPerPixel = bob.nextInt();
@@ -45,8 +45,9 @@ public class Main {
         Point3 lookAt;
         int vFOV;
         double aperture = 0;
+        Color background = Utility.hexToColor("#bce5f5");
 
-        switch (4) {
+        switch (5) {
             case 1:
                 world.add(Scenes.smallSpheres());
                 lookFrom = new Point3(13, 2.2, 4);
@@ -56,7 +57,7 @@ public class Main {
 
             case 2:
                 world.add(Scenes.checkeredSpheres());
-                lookFrom = new Point3(13, 2, 3);
+                lookFrom = new Point3(0, 0, 20);
                 lookAt = new Point3(0, 0, 0);
                 vFOV = 30;
                 break;
@@ -73,6 +74,16 @@ public class Main {
                 lookFrom = new Point3(5, 2, -1);
                 lookAt = new Point3(0, 0, -1.5);
                 vFOV = 60;
+                break;
+
+            case 5:
+                samplesPerPixel = 150;
+                world.add(Scenes.lights());
+                background.set(new Color(0, 0, 0));
+
+                lookFrom = new Point3(20, 3, 6);
+                lookAt = new Point3(0, 2, 0);
+                vFOV = 20;
                 break;
 
             default:
@@ -112,7 +123,7 @@ public class Main {
                         double u = (i + Utility.randomDouble()) / (imageWidth - 1);
                         double v = (j + Utility.randomDouble()) / (imageHeight - 1);
                         Ray r = cam.getRay(u, v);
-                        pixelColor = Vec3.add(pixelColor, rayColor(r, world, maxDepth)).toColor();
+                        pixelColor = Vec3.add(pixelColor, rayColor(r, background, world, maxDepth)).toColor();
                     }
                     output.append(writeColor(pixelColor, samplesPerPixel));
                 }
@@ -144,30 +155,30 @@ public class Main {
     }
 
     // function to figure out what color the ray returns
-    public static Color rayColor(Ray r, Hittable world, int depth) {
+    public static Color rayColor(Ray r, Color background, Hittable world, int depth) {
+        HitRecord rec = new HitRecord();
+
         // recursion safeguard
         if (depth <= 0) {
             return new Color(0, 0, 0); // black
         }
 
-        // HitRecord from world with hit info of all objects
-        HitRecord rec = new HitRecord();
-        if (world.hit(r, 0.001, Utility.Infinity, rec)) {
-            Ray scattered = new Ray();
-            Color attenuation = new Color();
-            if (rec.getMaterial().scatter(r, rec, attenuation, scattered)) {
-                return Vec3.mul(attenuation, rayColor(scattered, world, depth - 1)).toColor();
-            }
-            return new Color(0, 0, 0);
-        }
+        // Check if ray hits anything, if not return the background color
+        if (!world.hit(r, 0.001, Utility.Infinity, rec))
+            return background;
 
-        // if the ray doesn't intersect anything, color the sky normally
-        Vec3 unitDirection = Vec3.unitVector(r.getDirection());
-        double t = 0.5 * (unitDirection.y() + 1);
-        // return (1 - t) * Color(1, 1, 1) + t * Color(0.5, 0.7, 1.0)
-        return Vec3.add(
-            Vec3.mul(Utility.hexToColor("#80d4ff"), (1 - t)),
-            Vec3.mul(new Color(1, 1, 1), t)
+        Ray scattered = new Ray();
+        Color attenuation = new Color();
+        Color emitted = rec.getMaterial().emitted(rec.getU(), rec.getV(), rec.getP());
+
+        // if ray doesn't get scattered return emitted color
+        if (!rec.getMaterial().scatter(r, rec, attenuation, scattered))
+            return emitted;
+
+        // return emitted + attenuation * ray_color(scattered, background, world, depth-1);
+        return Vec3.mul(
+            Vec3.add(emitted, attenuation),
+            rayColor(scattered, background, world, depth - 1)
         ).toColor();
     }
 

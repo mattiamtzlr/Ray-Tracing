@@ -8,8 +8,7 @@ public class Scenes {
 
         // ground
         Material groundMaterial = new Lambertian(new CheckerTexture(
-            Utility.hexToColor("#15c4d1"),
-            Utility.hexToColor("#F57131")
+            Utility.hexToColor("#15c4d1"), Utility.hexToColor("#F57131"), 6
         ));
         objects.add(new Sphere(new Point3(0, -1000, 0), 1000, groundMaterial));
 
@@ -45,7 +44,7 @@ public class Scenes {
         for (int a = -constraint; a < constraint; a++) {
             for (int b = -constraint; b < constraint; b++) {
                 double chooseMat = Utility.randomDouble();
-                Point3 center = new Point3(a + (0.7 * Utility.randomDouble()), Utility.randomDouble(0, 1.6), b + (0.7 * Utility.randomDouble()));
+                Point3 center = new Point3(a + (0.7 * Utility.randomDouble()), Utility.randomDouble(0, .6), b + (0.7 * Utility.randomDouble()));
 
                 if (Vec3.sub(center, new Point3(4, 0.2, 0)).length() > 0.9) {
                     Material sphereMat;
@@ -82,10 +81,10 @@ public class Scenes {
         HittableList objects = new HittableList();
 
         Material checker1 = new Lambertian(new CheckerTexture(
-            Vec3.random(0.3, 0.9).toColor(), new Color()
+            Vec3.random(0.3, 0.8).toColor(), new Color(), 2
         ));
         Material checker2 = new Lambertian(new CheckerTexture(
-            Vec3.random(0.3, 0.9).toColor(), new Color()
+            Vec3.random(0.3, 0.8).toColor(), new Color(), 20
         ));
 
         objects.add(new Sphere(new Point3(0, -10, 0), 10, checker1));
@@ -102,7 +101,7 @@ public class Scenes {
         Texture perlin3 = new NoiseTexture(Utility.hexToColor("#7fcf5d"), 12);
 
         Texture checkerTexture = new CheckerTexture(
-            Utility.hexToColor("#2c2c2c"), Utility.hexToColor("#4a4a4a")
+            Utility.hexToColor("#2c2c2c"), Utility.hexToColor("#4a4a4a"), .8
         );
 
         objects.add(new Sphere(new Point3(0, -1000, 0), 1000, new Lambertian(checkerTexture)));
@@ -123,6 +122,28 @@ public class Scenes {
         Texture moonTexture = new ImageTexture("textures/moonmap.jpg");
         Material moonMat = new Lambertian(moonTexture);
         objects.add(new Sphere(new Point3(2, 1.5, -3.2), .5, moonMat));
+
+        return objects;
+    }
+
+    public static HittableList lights() {
+        HittableList objects = new HittableList();
+
+        // ground
+        Texture checkerTexture = new CheckerTexture(
+            Utility.hexToColor("#611c80"), Utility.hexToColor("#9c4ebf"), 2
+        );
+        objects.add(new Sphere(new Point3(0, -1000, 0), 1000, new Lambertian(checkerTexture)));
+
+        // perlin sphere
+        Texture perlinText = new NoiseTexture(Utility.hexToColor("#ffeb87"), 5);
+        objects.add(new Sphere(new Point3(0, 2, 0), 2, new Lambertian(perlinText)));
+
+        // lights
+        Material diffLight1 = new DiffuseLight(new Color(5, 5, 5));
+        Material diffLight2 = new DiffuseLight(new Color(3, 3, 3));
+        objects.add(new XYRect(1, 3, .5, 3.5, -3, diffLight1));
+        objects.add(new XZRect(-2, 2, -2, 2, 5, diffLight2));
 
         return objects;
     }
