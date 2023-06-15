@@ -70,7 +70,6 @@ class CheckerTexture extends Texture {
          a 3D checker pattern.
         */
 
-
         double sines = Math.sin(size * p.x()) * Math.sin(size * p.y()) * Math.sin(size * p.z());
         if (sines < 0)
             return odd.value(u, v, p);

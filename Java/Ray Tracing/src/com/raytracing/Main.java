@@ -13,10 +13,10 @@ public class Main {
         Scanner bob = new Scanner(System.in);
 
         // dev boolean => set to false when rendering high quality
-        boolean dev = true;
+        boolean dev = false;
 
         // image properties
-        final double aspectRatio = (double) 16 / 9;
+        double aspectRatio = (double) 16 / 9;
 
         final int imageWidth;
         if (dev) {
@@ -25,7 +25,6 @@ public class Main {
             System.out.print("Image Width: ");
             imageWidth = bob.nextInt();
         }
-        final int imageHeight = (int) (imageWidth / aspectRatio);
 
         int samplesPerPixel;
         if (dev) {
@@ -47,7 +46,7 @@ public class Main {
         double aperture = 0;
         Color background = Utility.hexToColor("#bce5f5");
 
-        switch (5) {
+        switch (6) {
             case 1:
                 world.add(Scenes.smallSpheres());
                 lookFrom = new Point3(13, 2.2, 4);
@@ -86,6 +85,18 @@ public class Main {
                 vFOV = 20;
                 break;
 
+            case 6:
+                if (dev) samplesPerPixel = 30;
+                world.add(Scenes.cornellBox());
+
+                aspectRatio = 1;
+                background.set(new Color(0, 0, 0));
+
+                lookFrom = new Point3(0, 250, 950);
+                lookAt = new Point3(0, 250, 0);
+                vFOV = 40;
+                break;
+
             default:
                 world.add(Scenes.standardScene());
                 lookFrom = new Point3(13, 2.2, 4);
@@ -94,6 +105,8 @@ public class Main {
                 aperture = 0.1;
                 break;
         }
+
+        final int imageHeight = (int) (imageWidth / aspectRatio);
 
         Vec3 viewUp = new Vec3(0, 1, 0); // horizontally level view
         double distToFocus = Vec3.sub(lookFrom, lookAt).length();
@@ -112,7 +125,7 @@ public class Main {
 
             for (int j = imageHeight-1; j >= 0 ; j--) {
                 // progress
-                System.out.print("\rScanlines remaining: " + j + " --- " +
+                System.out.print("\rScanlines remaining: " + j + " of " + imageHeight + " --- " +
                     (int) (((double) (imageHeight - j) / imageHeight) * 100) + "% completed");
                 System.out.flush();
 

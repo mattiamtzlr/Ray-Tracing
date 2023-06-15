@@ -2,7 +2,6 @@ package com.raytracing;
 
 public class Scenes {
 
-    // ------------------------------------------------------------------------------ standard scene
     public static HittableList standardScene() {
         HittableList objects = new HittableList();
 
@@ -29,7 +28,6 @@ public class Scenes {
         return objects;
     }
 
-    // ------------------------------------------------------------------------------ random small spheres
     public static HittableList smallSpheres() {
         HittableList objects = new HittableList();
 
@@ -76,7 +74,6 @@ public class Scenes {
         return objects;
     }
 
-    // ------------------------------------------------------------------------------ two checkered spheres
     public static HittableList checkeredSpheres() {
         HittableList objects = new HittableList();
 
@@ -144,6 +141,24 @@ public class Scenes {
         Material diffLight2 = new DiffuseLight(new Color(3, 3, 3));
         objects.add(new XYRect(1, 3, .5, 3.5, -3, diffLight1));
         objects.add(new XZRect(-2, 2, -2, 2, 5, diffLight2));
+
+        return objects;
+    }
+
+    public static HittableList cornellBox() {
+        HittableList objects = new HittableList();
+
+        Material red   = new Lambertian(new Color(.65, .05, .05));
+        Material white = new Lambertian(new Color(.85, .85, .85));
+        Material green = new Lambertian(new Color(.12, .45, .15));
+        Material light = new DiffuseLight(new Color(15, 15, 15));
+
+        objects.add(new YZRect(0, 500, -250, 250, -250, green));
+        objects.add(new YZRect(0, 500, -250, 250, 250, red));
+        objects.add(new XZRect(-75, 75, -75, 75, 499, light));
+        objects.add(new XZRect(-250, 250, -250, 250, 0, white));
+        objects.add(new XZRect(-250, 250, -250, 250, 500, white));
+        objects.add(new XYRect(-250, 250, 0, 500, -250, white));
 
         return objects;
     }
