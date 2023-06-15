@@ -152,11 +152,11 @@ public class Scenes {
         Material red   = new Lambertian(new Color(.65, .05, .05));
         Material white = new Lambertian(new Color(.85, .85, .85));
         Material green = new Lambertian(new Color(.12, .45, .15));
-        Material light = new DiffuseLight(new Color(15, 15, 15));
+        Material light = new DiffuseLight(new Color(14, 14, 14));
 
         objects.add(new YZRect(0, 500, 0, 500, 0, green));
         objects.add(new YZRect(0, 500, 0, 500, 500, red));
-        objects.add(new XZRect(160, 340, 160, 340, 499, light));
+        objects.add(new XZRect(185, 315, 185, 315, 499, light));
 
         objects.add(new XYRect(0, 500, 0, 500, 0, white));   // back wall
         objects.add(new XZRect(0, 500, 0, 500, 0, white));   // floor
