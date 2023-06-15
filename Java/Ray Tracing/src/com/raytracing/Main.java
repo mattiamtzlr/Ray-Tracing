@@ -13,7 +13,7 @@ public class Main {
         Scanner bob = new Scanner(System.in);
 
         // dev boolean => set to false when rendering high quality
-        boolean dev = false;
+        boolean dev = true;
 
         // image properties
         double aspectRatio = (double) 16 / 9;
@@ -86,14 +86,14 @@ public class Main {
                 break;
 
             case 6:
-                if (dev) samplesPerPixel = 30;
+                if (dev) samplesPerPixel = 15;
                 world.add(Scenes.cornellBox());
 
                 aspectRatio = 1;
                 background.set(new Color(0, 0, 0));
 
-                lookFrom = new Point3(0, 250, 950);
-                lookAt = new Point3(0, 250, 0);
+                lookFrom = new Point3(250, 250, 1200);
+                lookAt = new Point3(250, 250, 0);
                 vFOV = 40;
                 break;
 

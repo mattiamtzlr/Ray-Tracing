@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class BHVNode implements Hittable {
+public class BVHNode implements Hittable {
     private final Hittable left;
     private final Hittable right;
     private final AABB box;
 
-    public BHVNode(HittableList list, double time0, double time1) {
+    public BVHNode(HittableList list, double time0, double time1) {
         // simple constructor to be called in code, transfers arguments to detailed constructor
         this(list.getObjects(), 0, list.getObjects().size(), time0, time1);
     }
 
-    public BHVNode(List<Hittable> srcObjects, int start, int end, double time0, double time1) {
+    public BVHNode(List<Hittable> srcObjects, int start, int end, double time0, double time1) {
         List<Hittable> objects = new ArrayList<>(srcObjects); // modifiable array of srcObjects
 
         int axis = Utility.randomInt(0, 2);
@@ -38,8 +38,8 @@ public class BHVNode implements Hittable {
             objects.subList(start, end).sort(comparator);
 
             int mid = start + objectSpan / 2;
-            this.left = new BHVNode(objects, start, mid, time0, time1);
-            this.right = new BHVNode(objects, mid, end, time0, time1);
+            this.left = new BVHNode(objects, start, mid, time0, time1);
+            this.right = new BVHNode(objects, mid, end, time0, time1);
         }
 
         AABB boxLeft = new AABB();

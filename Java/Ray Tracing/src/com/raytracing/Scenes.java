@@ -70,7 +70,7 @@ public class Scenes {
             }
         }
 
-        objects.add(new BHVNode(spheres, 0, 1));
+        objects.add(new BVHNode(spheres, 0, 1));
         return objects;
     }
 
@@ -146,6 +146,7 @@ public class Scenes {
     }
 
     public static HittableList cornellBox() {
+        // standard cornell box with all positive coordinates because negative numbers fuck shit up
         HittableList objects = new HittableList();
 
         Material red   = new Lambertian(new Color(.65, .05, .05));
@@ -153,12 +154,23 @@ public class Scenes {
         Material green = new Lambertian(new Color(.12, .45, .15));
         Material light = new DiffuseLight(new Color(15, 15, 15));
 
-        objects.add(new YZRect(0, 500, -250, 250, -250, green));
-        objects.add(new YZRect(0, 500, -250, 250, 250, red));
-        objects.add(new XZRect(-75, 75, -75, 75, 499, light));
-        objects.add(new XZRect(-250, 250, -250, 250, 0, white));
-        objects.add(new XZRect(-250, 250, -250, 250, 500, white));
-        objects.add(new XYRect(-250, 250, 0, 500, -250, white));
+        objects.add(new YZRect(0, 500, 0, 500, 0, green));
+        objects.add(new YZRect(0, 500, 0, 500, 500, red));
+        objects.add(new XZRect(160, 340, 160, 340, 499, light));
+
+        objects.add(new XYRect(0, 500, 0, 500, 0, white));   // back wall
+        objects.add(new XZRect(0, 500, 0, 500, 0, white));   // floor
+        objects.add(new XZRect(0, 500, 0, 500, 500, white)); // ceiling
+
+        // cuboid in the back, 170 x 170 x 340
+        Hittable box1 = new Box(new Point3(100, 0, 50), new Point3(270, 340, 220), white);
+        box1 = new Translate(box1, new Vec3(-5, 0, 0));
+        objects.add(box1);
+
+        // cube in the front, length 170
+        Hittable box2 = new Box(new Point3(230, 0, 280), new Point3(400, 170, 450), white);
+        box2 = new Translate(box2, new Vec3(5, 0, 0));
+        objects.add(box2);
 
         return objects;
     }
