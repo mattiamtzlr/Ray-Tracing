@@ -1,6 +1,4 @@
 package com.raytracing;
-
-class AARect {}
 class XYRect implements Hittable {
     private final Material material;
     private final double x0, x1, y0, y1, k;
