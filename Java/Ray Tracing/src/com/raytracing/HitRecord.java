@@ -28,7 +28,7 @@ public class HitRecord {
     }
 
     // setters
-    public void set(HitRecord hitRecord) { // complete setter UPDATE WHEN NEW FIELD
+    public void set(HitRecord hitRecord) { // complete setter UPDATE WHEN NEW FIELD IS ADDED
         this.p = hitRecord.getP();
         this.normal = hitRecord.getNormal();
         this.material = hitRecord.getMaterial();

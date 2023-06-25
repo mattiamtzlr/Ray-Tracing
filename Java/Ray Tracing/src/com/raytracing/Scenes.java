@@ -152,7 +152,7 @@ public class Scenes {
         Material red   = new Lambertian(new Color(.65, .05, .05));
         Material white = new Lambertian(new Color(.85, .85, .85));
         Material green = new Lambertian(new Color(.12, .45, .15));
-        Material light = new DiffuseLight(new Color(14, 14, 14));
+        Material light = new DiffuseLight(new Color(14.5, 14.5, 14.5));
 
         objects.add(new YZRect(0, 500, 0, 500, 0, green));
         objects.add(new YZRect(0, 500, 0, 500, 500, red));
@@ -162,14 +162,16 @@ public class Scenes {
         objects.add(new XZRect(0, 500, 0, 500, 0, white));   // floor
         objects.add(new XZRect(0, 500, 0, 500, 500, white)); // ceiling
 
-        // cuboid in the back, 170 x 170 x 340
-        Hittable box1 = new Box(new Point3(100, 0, 50), new Point3(270, 340, 220), white);
-        box1 = new Translate(box1, new Vec3(-5, 0, 0));
+        // cuboid in the back, 170 x 170 x 340, rotated counterclockwise
+        Hittable box1 = new Box(new Point3(0, 0, 0), new Point3(170, 340, 170), white);
+        box1 = new RotateY(box1, 15);
+        box1 = new Translate(box1, new Vec3(60, 0, 80));
         objects.add(box1);
 
-        // cube in the front, length 170
-        Hittable box2 = new Box(new Point3(230, 0, 280), new Point3(400, 170, 450), white);
-        box2 = new Translate(box2, new Vec3(5, 0, 0));
+        // cube in the front, length 170, rotated clockwise
+        Hittable box2 = new Box(new Point3(0, 0, 0), new Point3(170, 170, 170), white);
+        box2 = new RotateY(box2, -20);
+        box2 = new Translate(box2, new Vec3(290, 0, 250));
         objects.add(box2);
 
         return objects;

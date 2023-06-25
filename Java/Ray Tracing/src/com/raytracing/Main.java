@@ -18,7 +18,7 @@ public class Main {
         // image properties
         double aspectRatio = (double) 16 / 9;
 
-        final int imageWidth;
+        int imageWidth;
         if (dev) {
             imageWidth = 400;
         } else {
@@ -28,7 +28,7 @@ public class Main {
 
         int samplesPerPixel;
         if (dev) {
-            samplesPerPixel = 7;
+            samplesPerPixel = 10;
         } else {
             System.out.print("Samples per Pixel: ");
             samplesPerPixel = bob.nextInt();
@@ -86,7 +86,7 @@ public class Main {
                 break;
 
             case 6:
-                if (dev) samplesPerPixel = 15;
+                if (dev) samplesPerPixel = 30;
                 world.add(Scenes.cornellBox());
 
                 aspectRatio = 1;
