@@ -28,6 +28,57 @@ public class Scenes {
         return objects;
     }
 
+    public static HittableList insideBox() {
+        HittableList objects = new HittableList();
+
+        // ground
+        Material groundMaterial = new Lambertian(new CheckerTexture(
+            Utility.hexToColor("#159fd1"), Utility.hexToColor("#ff6419"), 6
+        ));
+        objects.add(new Sphere(new Point3(0, -1000, 0), 1000, groundMaterial));
+
+        // light
+        Material light = new DiffuseLight(new Color(1.8, 1.8, 1.8));
+        objects.add(new XZRect(-20, 20, -20, 20, 100, light));
+
+        // walls
+        Texture checkerGray = new CheckerTexture(
+            new Color(0.6, 0.6, 0.6),
+            new Color(0.8, 0.8, 0.8),
+            6
+        );
+        Material wallMat = new Metal(checkerGray, 0.6);
+        Material wallMatEmissive = new DiffuseLight(new Color(.95, .95, .87));
+        objects.add(new YZRect(0, 20, -10, 10, -9, wallMat));
+        objects.add(new YZRect(0, 20, -10, 10, 9, wallMat));
+
+        objects.add(new XYRect(-10, 15, 0, 20, -7, wallMatEmissive));
+        objects.add(new XYRect(-10, 15, 0, 20, 7, wallMat));
+
+        // standard spheres and cube
+        Material metalRed = new Metal(Utility.hexToColor("#e82e00"), 0.01);
+        Material green = new Lambertian(Utility.hexToColor("#0db307"));
+        Material metalGold = new Metal(Utility.rgbToColor("255, 174, 60"), 0.1);
+
+        Texture perlinMat4 = new NoiseTexture(Utility.rgbToColor("231, 122, 255"), 2);
+        Material perlinPurple = new Metal(perlinMat4, 0.8);
+
+        objects.add(new Sphere(new Point3(-5, 2, 3.3), 2, green));
+        double boxSize = 2.4;
+        Hittable box = new Box(
+            new Point3(-boxSize / 2, 0, -boxSize / 2),
+            new Point3(boxSize / 2, boxSize, boxSize / 2),
+            metalRed
+        );
+        box = new RotateY(box, 12);
+        objects.add(box);
+        objects.add(new Sphere(new Point3(4, 1, -1), 1, metalGold));
+
+        objects.add(new Sphere(new Point3(4, 0.55, 2.8), .45, perlinPurple));
+
+        return objects;
+    }
+
     public static HittableList smallSpheres() {
         HittableList objects = new HittableList();
 
@@ -128,19 +179,50 @@ public class Scenes {
 
         // ground
         Texture checkerTexture = new CheckerTexture(
-            Utility.hexToColor("#611c80"), Utility.hexToColor("#9c4ebf"), 2
+            Utility.hexToColor("#611c80"),
+            Utility.hexToColor("#9c4ebf"),
+            1.5
         );
         objects.add(new Sphere(new Point3(0, -1000, 0), 1000, new Lambertian(checkerTexture)));
 
-        // perlin sphere
-        Texture perlinText = new NoiseTexture(Utility.hexToColor("#ffeb87"), 5);
-        objects.add(new Sphere(new Point3(0, 2, 0), 2, new Lambertian(perlinText)));
+        // objects
+        Texture perlinText = new NoiseTexture( 5);
+        objects.add(new Sphere(new Point3(-1, 2, -2.5), 2, new Lambertian(perlinText)));
+
+        double boxSize = 2;
+        double boxAngle = 25;
+        Vec3 boxPos = new Vec3(1, 0.2, 1);
+        Material metal = new Metal(new Color(.7, .7, .7), .2);
+        Hittable box = new Box(new Point3(0, 0, 0), new Point3(boxSize, boxSize, boxSize), metal);
+        box = new RotateY(box, boxAngle);
+        box = new Translate(box, boxPos);
+        objects.add(box);
+
+        // top of box
+        Hittable topBox = new XZRect(0, boxSize, 0, boxSize, 0, metal);
+        topBox = new RotateY(topBox, boxAngle);
+        topBox = new Translate(topBox, Vec3.add(boxPos, new Vec3(0, boxSize, 0)));
+        objects.add(topBox);
+
+        Material red = new Lambertian(new Color(.65, .05, .05));
+        objects.add(new Sphere(new Point3(3.5, 1, -1), .5, red));
 
         // lights
-        Material diffLight1 = new DiffuseLight(new Color(5, 5, 5));
-        Material diffLight2 = new DiffuseLight(new Color(3, 3, 3));
-        objects.add(new XYRect(1, 3, .5, 3.5, -3, diffLight1));
-        objects.add(new XZRect(-2, 2, -2, 2, 5, diffLight2));
+        Material diffLightWhite = new DiffuseLight(new Color(1, 1, 1));
+        Material diffLightBlue = new DiffuseLight(Utility.hexToColor("#5ec1ff"));
+        Material diffLightPink = new DiffuseLight(Utility.hexToColor("#ff5ef2"));
+
+        objects.add(new XZRect(-4, 4, -4, 4, 5, diffLightWhite));
+
+        Hittable rightLight = new XYRect(-2, 2, 0, 3, 0, diffLightBlue);
+        rightLight = new RotateY(rightLight, -40);
+        rightLight = new Translate(rightLight, new Vec3(4, .5, -4));
+        objects.add(rightLight);
+
+        Hittable leftLight = new XYRect(-2, 2, 0, 3, 0, diffLightPink);
+        leftLight = new RotateY(leftLight, 10);
+        leftLight = new Translate(leftLight, new Vec3(3, .5, 4));
+        objects.add(leftLight);
 
         return objects;
     }

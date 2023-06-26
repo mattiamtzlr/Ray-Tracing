@@ -46,7 +46,7 @@ public class Main {
         double aperture = 0;
         Color background = Utility.hexToColor("#bce5f5");
 
-        switch (6) {
+        switch (7) {
             case 1:
                 world.add(Scenes.smallSpheres());
                 lookFrom = new Point3(13, 2.2, 4);
@@ -76,12 +76,12 @@ public class Main {
                 break;
 
             case 5:
-                samplesPerPixel = 150;
+                if (dev) samplesPerPixel = 100;
                 world.add(Scenes.lights());
                 background.set(new Color(0, 0, 0));
 
-                lookFrom = new Point3(20, 3, 6);
-                lookAt = new Point3(0, 2, 0);
+                lookFrom = new Point3(20, 4, 5);
+                lookAt = new Point3(0, 2, -.7);
                 vFOV = 20;
                 break;
 
@@ -95,6 +95,16 @@ public class Main {
                 lookFrom = new Point3(250, 250, 1200);
                 lookAt = new Point3(250, 250, 0);
                 vFOV = 40;
+                break;
+
+            case 7:
+                background.set(new Color());
+                if (dev) samplesPerPixel = 100;
+                world.add(Scenes.insideBox());
+                lookFrom = new Point3(8, 1.8, 2.5);
+                lookAt = new Point3(0, 0.4, 0);
+                vFOV = 45;
+                aperture = 0.1;
                 break;
 
             default:
