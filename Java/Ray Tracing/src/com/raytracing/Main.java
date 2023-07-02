@@ -46,36 +46,36 @@ public class Main {
         double aperture = 0;
         Color background = Utility.hexToColor("#bce5f5");
 
-        switch (7) {
-            case 1:
+        switch (8) {
+            case 1: // --------------------------------------------------------- small Spheres
                 world.add(Scenes.smallSpheres());
                 lookFrom = new Point3(13, 2.2, 4);
                 lookAt = new Point3(0, 0.4, 0);
                 vFOV = 20;
                 break;
 
-            case 2:
+            case 2: // --------------------------------------------------------- checkered Spheres
                 world.add(Scenes.checkeredSpheres());
                 lookFrom = new Point3(0, 0, 20);
                 lookAt = new Point3(0, 0, 0);
                 vFOV = 30;
                 break;
 
-            case 3:
+            case 3: // --------------------------------------------------------- perlin Spheres
                 world.add(Scenes.perlinSpheres());
                 lookFrom = new Point3(4, 4, 10);
                 lookAt = new Point3(0, 1.8, -2.5);
                 vFOV = 40;
                 break;
 
-            case 4:
+            case 4: // --------------------------------------------------------- earth & moon
                 world.add(Scenes.earth());
                 lookFrom = new Point3(5, 2, -1);
                 lookAt = new Point3(0, 0, -1.5);
                 vFOV = 60;
                 break;
 
-            case 5:
+            case 5: // --------------------------------------------------------- lights
                 if (dev) samplesPerPixel = 100;
                 world.add(Scenes.lights());
                 background.set(new Color(0, 0, 0));
@@ -85,7 +85,7 @@ public class Main {
                 vFOV = 20;
                 break;
 
-            case 6:
+            case 6: // --------------------------------------------------------- cornell box
                 if (dev) samplesPerPixel = 30;
                 world.add(Scenes.cornellBox());
 
@@ -97,9 +97,10 @@ public class Main {
                 vFOV = 40;
                 break;
 
-            case 7:
+            case 7: // --------------------------------------------------------- spheres inside box
                 background.set(new Color());
                 if (dev) samplesPerPixel = 100;
+
                 world.add(Scenes.insideBox());
                 lookFrom = new Point3(8, 1.8, 2.5);
                 lookAt = new Point3(0, 0.4, 0);
@@ -107,7 +108,17 @@ public class Main {
                 aperture = 0.1;
                 break;
 
-            default:
+            case 8: // --------------------------------------------------------- all rotations
+                background.set(new Color());
+                if (dev) samplesPerPixel = 100;
+
+                world.add(Scenes.rotations());
+                lookFrom = new Point3(0, 5.8, 10);
+                lookAt = new Point3(0, 3.5, 0);
+                vFOV = 60;
+                break;
+
+            default: // --------------------------------------------------------- default scene
                 world.add(Scenes.standardScene());
                 lookFrom = new Point3(13, 2.2, 4);
                 lookAt = new Point3(0, 0.4, 0);
@@ -166,6 +177,10 @@ public class Main {
             if (timeElapsed > 60 && timeScale.equals("seconds")) {
                 timeElapsed = timeElapsed / 60;
                 timeScale = "minutes";
+            }
+            if (timeElapsed > 60 && timeScale.equals("minutes")) {
+                timeElapsed = timeElapsed / 60;
+                timeScale = "hours";
             }
 
             System.out.printf("\nSuccessfully wrote to '%s' in %.2f %s.\n", fileName, timeElapsed, timeScale);

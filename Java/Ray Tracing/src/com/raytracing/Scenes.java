@@ -16,7 +16,11 @@ public class Scenes {
         Material material2 = new Lambertian(Utility.rgbToColor("71, 160, 255"));
         Material material3 = new Metal(Utility.rgbToColor("255, 174, 60"), 0.01);
 
-        Texture perlinMat4 = new NoiseTexture(Utility.rgbToColor("231, 122, 255"), 2);
+        Texture perlinMat4 = new NoiseTexture(
+            Utility.rgbToColor("231, 122, 255"),
+            2,
+            true
+        );
         Material material4 = new Metal(perlinMat4, 0);
 
         objects.add(new Sphere(new Point3(0, 1, 0), 1, material1));
@@ -60,7 +64,11 @@ public class Scenes {
         Material green = new Lambertian(Utility.hexToColor("#0db307"));
         Material metalGold = new Metal(Utility.rgbToColor("255, 174, 60"), 0.1);
 
-        Texture perlinMat4 = new NoiseTexture(Utility.rgbToColor("231, 122, 255"), 2);
+        Texture perlinMat4 = new NoiseTexture(
+            Utility.rgbToColor("231, 122, 255"),
+            2,
+            true
+        );
         Material perlinPurple = new Metal(perlinMat4, 0.8);
 
         objects.add(new Sphere(new Point3(-5, 2, 3.3), 2, green));
@@ -145,11 +153,11 @@ public class Scenes {
         HittableList objects = new HittableList();
 
         Texture perlin1 = new NoiseTexture(5);
-        Texture perlin2 = new NoiseTexture(Utility.hexToColor("#cf6a5d"), 3);
-        Texture perlin3 = new NoiseTexture(Utility.hexToColor("#7fcf5d"), 12);
+        Texture perlin2 = new NoiseTexture(Utility.hexToColor("#cf6a5d"), 3, true);
+        Texture perlin3 = new NoiseTexture(Utility.hexToColor("#7fcf5d"), 12, true);
 
         Texture checkerTexture = new CheckerTexture(
-            Utility.hexToColor("#2c2c2c"), Utility.hexToColor("#4a4a4a"), .8
+            Utility.hexToColor("#2c2c2c"), Utility.hexToColor("#4a4a4a"), 2
         );
 
         objects.add(new Sphere(new Point3(0, -1000, 0), 1000, new Lambertian(checkerTexture)));
@@ -223,6 +231,82 @@ public class Scenes {
         leftLight = new RotateY(leftLight, 10);
         leftLight = new Translate(leftLight, new Vec3(3, .5, 4));
         objects.add(leftLight);
+
+        return objects;
+    }
+
+    public static HittableList rotations() {
+        HittableList objects = new HittableList();
+
+        // ground
+        Material groundMaterial = new Metal(Utility.hexToColor("#d5e3dc"), .1);
+        objects.add(new XZRect(-1000, 1000, -1000, 1000, 0, groundMaterial));
+
+        Material cubeX = new Lambertian(new ImageTexture("textures/x.png"));
+        Material cubeY = new Lambertian(new ImageTexture("textures/y.png"));
+        Material cubeZ = new Lambertian(new ImageTexture("textures/z.png"));
+        double cubeSize = 1.1;
+        double forward = 2.5;
+
+        Hittable cube1 = new Box(
+            new Point3(-cubeSize, -cubeSize, -cubeSize),
+            new Point3(cubeSize, cubeSize, cubeSize),
+            cubeX
+        );
+        cube1 = new RotateX(cube1, 30);
+        cube1 = new Translate(cube1, new Vec3(-5, 2, forward - 0.2));
+        objects.add(cube1);
+
+        Hittable cube2 = new Box(
+            new Point3(-cubeSize, -cubeSize, -cubeSize),
+            new Point3(cubeSize, cubeSize, cubeSize),
+            cubeY
+        );
+        cube2 = new RotateY(cube2, 30);
+        cube2 = new Translate(cube2, new Vec3(0, 2, forward + 0.2));
+        objects.add(cube2);
+
+        Hittable cube3 = new Box(
+            new Point3(-cubeSize, -cubeSize, -cubeSize),
+            new Point3(cubeSize, cubeSize, cubeSize),
+            cubeZ
+        );
+        cube3 = new RotateZ(cube3, 30);
+        cube3 = new Translate(cube3, new Vec3(5, 2, forward - 0.2));
+        objects.add(cube3);
+
+        Material bigCubeMat = new Lambertian(new NoiseTexture(
+            Utility.hexToColor("#ff8717"),
+            1
+        ));
+        double bigCubeSize = 3.5;
+        Hittable bigCube = new Box(
+            new Point3(-bigCubeSize, -bigCubeSize, -bigCubeSize),
+            new Point3(bigCubeSize, bigCubeSize, bigCubeSize),
+            bigCubeMat
+        );
+        bigCube = new RotateX(bigCube, -20);
+        bigCube = new RotateY(bigCube, 25);
+        bigCube = new RotateZ(bigCube, -5);
+        bigCube = new Translate(bigCube, new Vec3(0, 4.8, -10));
+        objects.add(bigCube);
+
+        // wall
+        Material wallMat = new Lambertian(Utility.hexToColor("#ecb3ff"));
+        Hittable wall = new XYRect(-70, 70, 0, 30, -45, wallMat);
+        objects.add(wall);
+
+        // lights
+        Material lightMatTop = new DiffuseLight(new Color(1.5, 1.5, 1.5));
+        Material lightMat = new DiffuseLight(new Color(1.2, 1.2, 1));
+
+        Hittable light = new XZRect(-20, 20, -20, 20, 0, lightMat);
+        light = new RotateX(light, 40);
+        light = new Translate(light, new Vec3(0, 10, 8));
+        objects.add(light);
+
+        Hittable topLight = new XZRect(-100, 100, -100, 100, 50, lightMatTop);
+        objects.add(topLight);
 
         return objects;
     }

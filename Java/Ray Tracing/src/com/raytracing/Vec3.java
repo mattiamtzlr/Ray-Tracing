@@ -3,7 +3,7 @@ package com.raytracing;
 import java.lang.Math;
 
 public class Vec3 {
-    public double[] e = new double[3];
+    private double[] e = new double[3];
 
     public Vec3() {
         e = new double[]{0, 0, 0};
@@ -37,6 +37,12 @@ public class Vec3 {
 
     public void setComp(int comp, double val) {
         this.e[comp] = val;
+    }
+
+    public void set(double x, double y, double z) {
+        this.e[0] = x;
+        this.e[1] = y;
+        this.e[2] = z;
     }
 
     public void set(Vec3 newVec) {

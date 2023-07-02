@@ -82,29 +82,43 @@ class NoiseTexture extends Texture {
     private final Color albedo;
     private final Perlin perlin = new Perlin();
     private final double scale;
-
-    public NoiseTexture() {
-        this.albedo = new Color(1, 1, 1);
-        this.scale = 1.0;
-    }
+    private final boolean turbulence;
     public NoiseTexture(double scale) {
         this.albedo = new Color(1, 1, 1);
         this.scale = scale;
+        this.turbulence = false;
     }
     public NoiseTexture(Color albedo, double scale) {
         this.albedo = albedo;
         this.scale = scale;
+        this.turbulence = false;
+    }
+    public NoiseTexture(Color albedo, double scale, boolean enableTurbulence) {
+        this.albedo = albedo;
+        this.scale = scale;
+        this.turbulence = enableTurbulence;
     }
 
     @Override
     public Color value(double u, double v, Point3 p) {
-        return Vec3.mul(
-            Vec3.mul(
-                this.albedo,
-                0.5
-            ),
-            1 + Math.sin(this.scale * p.z() + 10 * perlin.turbulence(p, 7))
-        ).toColor();
+        if (turbulence) {
+            return Vec3.mul(
+                Vec3.mul(
+                    this.albedo,
+                    0.5
+                ),
+                1 + Math.sin(this.scale * p.getComp(2) + 10 * perlin.turbulence(p, 7))
+            ).toColor();
+
+        } else {
+            return Vec3.mul(
+                Vec3.mul(
+                    this.albedo,
+                    0.5
+                ),
+                1 + Math.sin(this.scale * p.getComp(1) + 10 * perlin.noise(p))
+            ).toColor();
+        }
     }
 }
 
