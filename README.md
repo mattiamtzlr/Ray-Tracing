@@ -28,4 +28,9 @@ The point that the camera looks at from the viewpoint is "behind" the sphere at 
 It appears as if nothing much has changed between this image and the ones for the to previous chapters, however thanks to the implementation of Bounding Volume Hierarchies the rendering was done about 4 times faster, even with more spheres than before.
 
 ### High Resolution images
-Some high resolution pictures can be found in the `/images/HighRes` directory. These were generated in 4K (3840 x 2160 pixels) with 500 samples per pixel. These take at least 20 to 30 minutes to render on my machine, but they don't have any noise at all which does make it quite worth it.
+Some high resolution pictures can be found in the `/images/HighRes` directory. These were generated in 4K (3840 x 2160 pixels) with 500 samples per pixel. These take at least 20 to 30 minutes to render on my machine, but they don't have any noise at all which does make it quite worth the wait.  
+Feel free to use these pictures as wallpapers etc.
+
+### Instance Rotations in `Hittable.java`
+In the original book by Shirley he only programs the instance rotation around the y-axis. I wanted to add rotation around the other axes as well, which is why I added the `RotateX` and `RotateZ` classes as well.  
+An example of all these rotations can be found at `/images/chapter_2_08.2_2.png`.
