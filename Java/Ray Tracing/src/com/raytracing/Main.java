@@ -46,7 +46,7 @@ public class Main {
         double aperture = 0;
         Color background = Utility.hexToColor("#bce5f5");
 
-        switch (8) {
+        switch (0) {
             case 1: // --------------------------------------------------------- small Spheres
                 world.add(Scenes.smallSpheres());
                 lookFrom = new Point3(13, 2.2, 4);
@@ -110,7 +110,7 @@ public class Main {
 
             case 8: // --------------------------------------------------------- all rotations
                 background.set(new Color());
-                if (dev) samplesPerPixel = 100;
+                if (dev) samplesPerPixel = 75;
 
                 world.add(Scenes.rotations());
                 lookFrom = new Point3(0, 5.8, 10);
@@ -183,7 +183,11 @@ public class Main {
                 timeScale = "hours";
             }
 
-            System.out.printf("\nSuccessfully wrote to '%s' in %.2f %s.\n", fileName, timeElapsed, timeScale);
+            System.out.printf("\nSuccessfully wrote to '%s' in %.2f %s.", fileName, timeElapsed, timeScale);
+            System.out.printf(
+                "\nWidth: %dpx | Height: %dpx | Samples per Pixel: %d\n",
+                imageWidth, imageHeight, samplesPerPixel
+            );
 
         } catch (IOException e) {
             System.out.printf("Error while writing to '%s'.\n", fileName);

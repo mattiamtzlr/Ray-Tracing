@@ -239,7 +239,7 @@ public class Scenes {
         HittableList objects = new HittableList();
 
         // ground
-        Material groundMaterial = new Metal(Utility.hexToColor("#d5e3dc"), .1);
+        Material groundMaterial = new Lambertian(Utility.hexToColor("#807f74"));
         objects.add(new XZRect(-1000, 1000, -1000, 1000, 0, groundMaterial));
 
         Material cubeX = new Lambertian(new ImageTexture("textures/x.png"));
