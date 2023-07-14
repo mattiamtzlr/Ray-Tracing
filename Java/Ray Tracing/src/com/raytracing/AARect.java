@@ -39,8 +39,8 @@ class XYRect implements Hittable {
     public boolean boundingBox(double time0, double time1, AABB outputBox) {
         // The bounding box must have non-zero width in each dimension, so pad the Z dimension a small amount.
         outputBox.set(new AABB(
-            new Point3(x0, y0, k - 0.0001),
-            new Point3(x1, y1, k + 0.0001)
+            new Point3(x0, y0, k - 0.05),
+            new Point3(x1, y1, k + 0.05)
         ));
         return true;
     }
@@ -86,8 +86,8 @@ class XZRect implements Hittable {
     public boolean boundingBox(double time0, double time1, AABB outputBox) {
         // The bounding box must have non-zero width in each dimension, so pad the Z dimension a small amount.
         outputBox.set(new AABB(
-            new Point3(x0, k - 0.0001, z0),
-            new Point3(x1, k + 0.0001, z1)
+            new Point3(x0, k - 0.05, z0),
+            new Point3(x1, k + 0.05, z1)
         ));
         return true;
     }
@@ -133,8 +133,8 @@ class YZRect implements Hittable {
     public boolean boundingBox(double time0, double time1, AABB outputBox) {
         // The bounding box must have non-zero width in each dimension, so pad the Z dimension a small amount.
         outputBox.set(new AABB(
-            new Point3(k - 0.0001, y0, z0),
-            new Point3(k + 0.0001, y1, z1)
+            new Point3(k - 0.05, y0, z0),
+            new Point3(k + 0.05, y1, z1)
         ));
         return true;
     }

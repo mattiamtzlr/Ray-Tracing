@@ -17,16 +17,16 @@ public class Box implements Hittable {
         this.boxMax = p1;
 
         // "front" and "back"
-        sides.add(new XYRect(p0.x(), p1.x(), p0.y(), p1.y(), p0.z(), material));
         sides.add(new XYRect(p0.x(), p1.x(), p0.y(), p1.y(), p1.z(), material));
+        sides.add(new XYRect(p0.x(), p1.x(), p0.y(), p1.y(), p0.z(), material));
 
         // "top" and "bottom"
-        sides.add(new XZRect(p0.x(), p1.x(), p0.z(), p1.z(), p0.y(), material));
         sides.add(new XZRect(p0.x(), p1.x(), p0.z(), p1.z(), p1.y(), material));
+        sides.add(new XZRect(p0.x(), p1.x(), p0.z(), p1.z(), p0.y(), material));
 
         // "left" and "right"
-        sides.add(new YZRect(p0.y(), p1.y(), p0.z(), p1.z(), p0.x(), material));
         sides.add(new YZRect(p0.y(), p1.y(), p0.z(), p1.z(), p1.x(), material));
+        sides.add(new YZRect(p0.y(), p1.y(), p0.z(), p1.z(), p0.x(), material));
     }
 
     @Override
