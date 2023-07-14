@@ -375,4 +375,93 @@ public class Scenes {
 
         return objects;
     }
+
+    public static HittableList finalScene() {
+        HittableList objects = new HittableList();
+
+        // ---------------------------------------------------------------------------------- ground
+        HittableList groundBoxes = new HittableList();
+        Material groundMat1 = new Lambertian(Utility.hexToColor("#70e081"));
+        Material groundMat2 = new Lambertian(Utility.hexToColor("#34d976"));
+        Material groundMat3 = new Lambertian(Utility.hexToColor("#34d94d"));
+        Material[] groundMat = {groundMat1, groundMat2, groundMat3};
+
+        int boxesPerSide = 20;
+        int boxWidth = 100;
+        for (int i = 0; i < boxesPerSide; i++) {
+            for (int j = 0; j < boxesPerSide; j++) {
+                double x0 = -1000 + (i * boxWidth);
+                double y0 = 0;
+                double z0 = -1000 + (j * boxWidth);
+                double x1 = x0 + boxWidth;
+                double y1 = Utility.randomDouble(20, 80);
+                double z1 = z0 + boxWidth;
+
+                groundBoxes.add(new Box(
+                    new Point3(x0, y0, z0),
+                    new Point3(x1, y1, z1),
+                    Utility.randomChoice(groundMat)
+                ));
+            }
+        }
+
+        objects.add(new BVHNode(groundBoxes, 0, 1));
+
+        // ---------------------------------------------------------------------------------- light & fog
+        Material lightMat = new DiffuseLight(new Color(2, 2, 2));
+        Hittable light = new XZRect(-1000, 1000, -1000, 1000, 0, lightMat);
+        light = new RotateY(light, 45);
+        light = new RotateX(light, 45);
+        light = new Translate(light, new Vec3(0, 1300, 300));
+        objects.add(light);
+
+        Sphere fogBoundary = new Sphere(new Point3(), 3000, new Dielectric(1.5));
+        objects.add(new ConstantMedium(fogBoundary, 0.00016, new Color(1, 1, 1)));
+
+        // ---------------------------------------------------------------------------------- walls
+        Material wallMat = new Metal(new Color(.3, .3, .3), 0.9);
+        objects.add(new XYRect(-1000, 1000, 0, 2000, -1000, wallMat));
+        objects.add(new YZRect(0, 2000, -1000, 1000, -1000, wallMat));
+
+        // ---------------------------------------------------------------------------------- texture cube
+        Texture texture = new ImageTexture("textures/cubeTexture.jpg");
+        Hittable checkerBox = new Box(
+            new Point3(0, 0, 0),
+            new Point3(100, 100, 100),
+            new Lambertian(texture)
+        );
+        checkerBox = new RotateX(checkerBox, 30);
+        checkerBox = new RotateY(checkerBox, 20);
+        checkerBox = new Translate(checkerBox, new Vec3(360, 170, 660));
+        objects.add(checkerBox);
+
+        // ---------------------------------------------------------------------------------- cube of spheres
+        HittableList cubeSpheres = new HittableList();
+        Material smallSphereMat1 = new Lambertian(Utility.hexToColor("#d7f2fa"));
+        Material smallSphereMat2 = new Lambertian(Utility.hexToColor("#ff8375"));
+        Material smallSphereMat3 = new Lambertian(Utility.hexToColor("#ffd70d"));
+        Material[] smallSphereMat = {smallSphereMat1, smallSphereMat2, smallSphereMat3};
+
+        int ns = 1500; // number of Spheres
+        for (int i = 0; i < ns; i++) {
+            cubeSpheres.add(new Sphere(
+                Vec3.random(0, 150).toPoint3(),
+                10,
+                Utility.randomChoice(smallSphereMat))
+            );
+        }
+        Hittable cubeSpheresBHV = new BVHNode(cubeSpheres, 0, 1);
+        cubeSpheresBHV = new RotateY(cubeSpheresBHV, -20);
+        cubeSpheresBHV = new Translate(cubeSpheresBHV, new Vec3(590, 120, 360));
+        objects.add(cubeSpheresBHV);
+
+        // ---------------------------------------------------------------------------------- other stuff
+        Material roseGold = new Metal(Utility.hexToColor("#f0ab9c"), 0.5);
+        objects.add(new Sphere(new Point3(-200, 400, -300), 280, roseGold));
+
+        Material glass = new Dielectric(1.5);
+        objects.add(new Sphere(new Point3(650, 140, 730), 20, glass));
+
+        return objects;
+    }
 }

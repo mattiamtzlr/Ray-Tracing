@@ -46,7 +46,7 @@ public class Main {
         double aperture = 0;
         Color background = Utility.hexToColor("#bce5f5");
 
-        switch (7) {
+        switch (8) {
             case 1: // --------------------------------------------------------- small Spheres
                 world.add(Scenes.smallSpheres());
                 lookFrom = new Point3(13, 2.2, 4);
@@ -107,6 +107,18 @@ public class Main {
                 vFOV = 40;
                 break;
 
+            case 8: // --------------------------------------------------------- final scene for book 2
+                if (dev) samplesPerPixel = 25;
+                background.set(new Color());
+                imageWidth = 600;
+
+                world.add(Scenes.finalScene());
+                lookFrom = new Point3(700, 160, 900);
+                lookAt = new Point3(150, 140, 0);
+                vFOV = 50;
+                aperture = .2;
+                break;
+
             case 20: // --------------------------------------------------------- spheres inside box
                 if (dev) samplesPerPixel = 100;
                 background.set(new Color());
@@ -115,7 +127,7 @@ public class Main {
                 lookFrom = new Point3(8, 1.8, 2.5);
                 lookAt = new Point3(0, 0.4, 0);
                 vFOV = 45;
-                aperture = 0.1;
+                aperture = 10;
                 break;
 
             case 21: // --------------------------------------------------------- all rotations
