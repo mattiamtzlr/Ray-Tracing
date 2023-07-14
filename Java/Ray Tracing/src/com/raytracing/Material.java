@@ -135,3 +135,24 @@ class DiffuseLight extends Material {
         return emit.value(u, v, p);
     }
 }
+
+class Isotropic extends Material {
+    private Texture albedo;
+
+    public Isotropic(Color color) {
+        albedo = new SolidColor(color);
+    }
+    public Isotropic(Texture texture) {
+        albedo = texture;
+    }
+
+    @Override
+    public boolean scatter(Ray rIn, HitRecord rec, Color attenuation, Ray scattered) {
+        scattered.setOrigin(rec.getP());
+        scattered.setDirection(Vec3.randomInUnitSphere());
+        scattered.setTime(rIn.getTime());
+
+        attenuation.set(albedo.value(rec.getU(), rec.getV(), rec.getP()));
+        return true;
+    }
+}

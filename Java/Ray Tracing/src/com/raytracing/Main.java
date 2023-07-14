@@ -46,7 +46,7 @@ public class Main {
         double aperture = 0;
         Color background = Utility.hexToColor("#bce5f5");
 
-        switch (0) {
+        switch (7) {
             case 1: // --------------------------------------------------------- small Spheres
                 world.add(Scenes.smallSpheres());
                 lookFrom = new Point3(13, 2.2, 4);
@@ -77,9 +77,9 @@ public class Main {
 
             case 5: // --------------------------------------------------------- lights
                 if (dev) samplesPerPixel = 100;
-                world.add(Scenes.lights());
-                background.set(new Color(0, 0, 0));
+                background.set(new Color());
 
+                world.add(Scenes.lights());
                 lookFrom = new Point3(20, 4, 5);
                 lookAt = new Point3(0, 2, -.7);
                 vFOV = 20;
@@ -87,19 +87,29 @@ public class Main {
 
             case 6: // --------------------------------------------------------- cornell box
                 if (dev) samplesPerPixel = 30;
-                world.add(Scenes.cornellBox());
-
+                background.set(new Color());
                 aspectRatio = 1;
-                background.set(new Color(0, 0, 0));
 
+                world.add(Scenes.cornellBox());
                 lookFrom = new Point3(250, 250, 1200);
                 lookAt = new Point3(250, 250, 0);
                 vFOV = 40;
                 break;
 
-            case 7: // --------------------------------------------------------- spheres inside box
+            case 7: // --------------------------------------------------------- cornell box smoke
+                if (dev) samplesPerPixel = 75;
                 background.set(new Color());
+                aspectRatio = 1;
+
+                world.add(Scenes.cornellBoxSmoke());
+                lookFrom = new Point3(250, 250, 1200);
+                lookAt = new Point3(250, 250, 0);
+                vFOV = 40;
+                break;
+
+            case 20: // --------------------------------------------------------- spheres inside box
                 if (dev) samplesPerPixel = 100;
+                background.set(new Color());
 
                 world.add(Scenes.insideBox());
                 lookFrom = new Point3(8, 1.8, 2.5);
@@ -108,9 +118,9 @@ public class Main {
                 aperture = 0.1;
                 break;
 
-            case 8: // --------------------------------------------------------- all rotations
-                background.set(new Color());
+            case 21: // --------------------------------------------------------- all rotations
                 if (dev) samplesPerPixel = 75;
+                background.set(new Color());
 
                 world.add(Scenes.rotations());
                 lookFrom = new Point3(0, 5.8, 10);
