@@ -26,6 +26,10 @@ public class Utility {
         return (int) randomDouble(min, max + 1);
     }
 
+    public static <T> T randomChoice(T[] options) {
+        return options[randomInt(0, options.length - 1)];
+    }
+
     public static double clamp(double x, double min, double max) {
         // Clamps x between min and max, if outside the range, the return value is min or max respectively.
         return Math.min(Math.max(x, min), max);
