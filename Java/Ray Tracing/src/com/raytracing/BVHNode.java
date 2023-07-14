@@ -77,7 +77,7 @@ public class BVHNode implements Hittable {
         if (!this.box.hit(r, tMin, tMax)) return false;
 
         boolean hitLeft = this.left.hit(r, tMin, tMax, rec);
-        boolean hitRight = this.right.hit(r, tMin, tMax, rec);
+        boolean hitRight = this.right.hit(r, tMin, hitLeft ? rec.getT() : tMax, rec);
 
         return hitLeft || hitRight;
     }
