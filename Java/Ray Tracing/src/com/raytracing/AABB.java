@@ -42,19 +42,21 @@ public class AABB {
 
     public boolean hit(Ray r, double tMin, double tMax) {
         for (int a = 0; a < 3; a++) {
-            double t0 = Math.min(
-                (this.minimum.getComp(a) - r.getOrigin().getComp(a)) / r.getDirection().getComp(a),
-                (this.maximum.getComp(a) - r.getOrigin().getComp(a)) / r.getDirection().getComp(a)
-            );
-            double t1 = Math.max(
-                (this.minimum.getComp(a) - r.getOrigin().getComp(a)) / r.getDirection().getComp(a),
-                (this.maximum.getComp(a) - r.getOrigin().getComp(a)) / r.getDirection().getComp(a)
-            );
+            double invD = 1 / r.getDirection().getComp(a);
+            double t0 = (getMinimum().getComp(a) - r.getOrigin().getComp(a)) * invD;
+            double t1 = (getMaximum().getComp(a) - r.getOrigin().getComp(a)) * invD;
+
+            if (invD < 0) {
+                double temp = t0;
+                t0 = t1;
+                t1 = temp;
+            }
 
             tMin = Math.max(t0, tMin);
             tMax = Math.min(t1, tMax);
 
-            if (tMax <= tMin) return false;
+            if (tMax <= tMin)
+                return false;
         }
         return true;
     }
