@@ -32,5 +32,5 @@ Some high resolution pictures can be found in the `/images/HighRes` directory. T
 Feel free to use these pictures as wallpapers etc.
 
 ### Instance Rotations in `Hittable.java`
-In the original book by Shirley he only programs the instance rotation around the y-axis. I wanted to add rotation around the other axes as well, which is why I added the `RotateX` and `RotateZ` classes as well.  
+In the original book, Shirley only programs the instance rotation around the y-axis. I wanted to add rotation around the other axes as well, which is why I added the `RotateX` and `RotateZ` classes as well.  
 An example of all these rotations can be found at `/images/chapter_2_08.2_2.png`.
