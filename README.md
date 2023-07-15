@@ -6,10 +6,13 @@ Shirley originally coded his version in C++ which I don't know at all, so I used
 _I originally coded everything in Python, but that was too slow, which is why I ported everything to Java after chapter 8.4.  
 The python script requires `tqdm` to be installed. Install it using `pip install tqdm`._
 
-At the time of writing this (18.05.2023), I have finished the first book in the series (see `/images/chapter_13.png` for the result) and will be continuing with at least the second book and maybe even with the third one.  
-Sadly the ray tracer is again really slow when rendering with high-quality settings. In low-quality and with a small image size it runs quite fast, though.
+I saved some images of the progress of the ray tracer in the `/images` directory. The name of the image corresponds to the chapter, after which I generated that image.  
 
-I saved some images of the progress of the ray tracer in the `/images` directory. The name of the image corresponds to the chapter, after which I generated that image.
+At the time of writing this (18.05.2023), I have finished the first book in the series (see `/images/chapter_1_13.png` for the result) and will be continuing with at least the second book and maybe even with the third one.  
+Sadly the ray tracer is again really slow when rendering with high-quality settings. In low-quality and with a small image size it runs quite fast, though.  
+
+__Update:__ As of today (15.07.2023), I have finished the second book in the series (see `/images/chapter_2_10.png` for the result). I will probably not continue with the third book as it involves a lot of high-level math, that I don't understand.
+However I will try to implement more features, first of all the ability to render triangles, which will enable me to render any mesh I want.
 
 ## Notes / Remarks
 Some notes and remarks to different chapters, changes or concepts.
