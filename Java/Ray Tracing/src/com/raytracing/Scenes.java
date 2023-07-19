@@ -239,7 +239,7 @@ public class Scenes {
         HittableList objects = new HittableList();
 
         // ground
-        Material groundMaterial = new Lambertian(Utility.hexToColor("#807f74"));
+        Material groundMaterial = new Metal(Utility.hexToColor("#cbbecf"), .95);
         objects.add(new XZRect(-1000, 1000, -1000, 1000, 0, groundMaterial));
 
         Material cubeX = new Lambertian(new ImageTexture("textures/x.png"));
@@ -296,17 +296,13 @@ public class Scenes {
         Hittable wall = new XYRect(-70, 70, 0, 30, -45, wallMat);
         objects.add(wall);
 
-        // lights
-        Material lightMatTop = new DiffuseLight(new Color(1.5, 1.5, 1.5));
-        Material lightMat = new DiffuseLight(new Color(1.2, 1.2, 1));
+        // light
+        Material lightMat = new DiffuseLight(new Color(2, 2, 2));
 
-        Hittable light = new XZRect(-20, 20, -20, 20, 0, lightMat);
+        Hittable light = new XZRect(-40, 40, -40, 40, 0, lightMat);
         light = new RotateX(light, 40);
-        light = new Translate(light, new Vec3(0, 10, 8));
+        light = new Translate(light, new Vec3(0, 20, 15));
         objects.add(light);
-
-        Hittable topLight = new XZRect(-100, 100, -100, 100, 50, lightMatTop);
-        objects.add(topLight);
 
         return objects;
     }
@@ -450,10 +446,10 @@ public class Scenes {
                 Utility.randomChoice(smallSphereMat))
             );
         }
-        Hittable cubeSpheresBHV = new BVHNode(cubeSpheres, 0, 1);
-        cubeSpheresBHV = new RotateY(cubeSpheresBHV, -20);
-        cubeSpheresBHV = new Translate(cubeSpheresBHV, new Vec3(590, 120, 360));
-        objects.add(cubeSpheresBHV);
+        Hittable cubeSpheresBVH = new BVHNode(cubeSpheres, 0, 1);
+        cubeSpheresBVH = new RotateY(cubeSpheresBVH, -20);
+        cubeSpheresBVH = new Translate(cubeSpheresBVH, new Vec3(590, 120, 360));
+        objects.add(cubeSpheresBVH);
 
         // ---------------------------------------------------------------------------------- other stuff
         Material roseGold = new Metal(Utility.hexToColor("#f0ab9c"), 0.5);
@@ -461,6 +457,78 @@ public class Scenes {
 
         Material glass = new Dielectric(1.5);
         objects.add(new Sphere(new Point3(650, 140, 730), 20, glass));
+
+        return objects;
+    }
+
+    public static HittableList bokeh() {
+        HittableList objects = new HittableList();
+
+        // ----------------------------------------------------------------------------------------- spheres
+        Material sphereMat1 = new DiffuseLight(Utility.hexToColor("#ffd969"));
+        Material sphereMat2 = new DiffuseLight(Utility.hexToColor("#ffb769"));
+        Material sphereMat3 = new DiffuseLight(Utility.hexToColor("#fcec9d"));
+        Material[] sphereMat = {sphereMat1, sphereMat2, sphereMat3};
+
+        HittableList spheres = new HittableList();
+
+        final int[] gridSize = {22, 10};
+        final double sphereRadius = 0.5;
+        final double gap = 3.4;
+
+        double startX = -(gridSize[0] * (sphereRadius / 2) + (double) ((gridSize[0] - 1) / 2) * gap);
+        double startY = -(gridSize[1] * (sphereRadius / 2) + (double) ((gridSize[1] - 1) / 2) * gap);
+
+        for (int i = 0; i < gridSize[0]; i++) {
+            for (int j = 0; j < gridSize[1]; j++) {
+                double x = startX + (i * sphereRadius) + (i * gap) + Utility.randomDouble(-gap / 3, gap / 3);
+                double y = startY + (j * sphereRadius) + (j * gap) + Utility.randomDouble(-gap / 3, gap / 3);
+                Point3 origin = new Point3(x, y, 0);
+
+                spheres.add(new Sphere(
+                    origin,
+                    sphereRadius + Utility.randomDouble(-0.2, 0.2),
+                    Utility.randomChoice(sphereMat)
+                ));
+            }
+        }
+        Hittable spheresBVH = new BVHNode(spheres, 0, 1);
+        objects.add(spheresBVH);
+
+        Material wallMat = new Lambertian(new Color(.2, .2, .2));
+        Hittable wallBehindLights = new XYRect(-50, 50, -50, 50, -5, wallMat);
+        objects.add(wallBehindLights);
+
+        // ----------------------------------------------------------------------------------------- cube & platform
+        Texture noise = new NoiseTexture(Utility.hexToColor("#5c4941"), 2, true);
+        Material cubeMat = new Lambertian(noise);
+        double cubeSize = .7;
+
+        Hittable cube = new Box(
+            new Point3(-cubeSize, -cubeSize, -cubeSize),
+            new Point3(cubeSize, cubeSize, cubeSize),
+            cubeMat
+        );
+        cube = new RotateY(cube, 30);
+        cube = new Translate(cube, new Vec3(0, cubeSize * 1.5, 35));
+
+        Hittable platform = new Box(
+            new Point3(-cubeSize * 6, -1, -cubeSize * 2),
+            new Point3(cubeSize * 6, cubeSize * 0.5, cubeSize * 2),
+            new Lambertian(new Color(0.08, 0.08, 0.08))
+        );
+        platform = new Translate(platform, new Vec3(0, 0, 35));
+
+        objects.add(cube);
+        objects.add(platform);
+
+        // ----------------------------------------------------------------------------------------- light
+        Material lightMat = new DiffuseLight(new Color(8.5, 8.5, 8.5));
+        Hittable light = new XYRect(-5, 5, -5, 5, 0, lightMat);
+        light = new RotateX(light, -50);
+        light = new Translate(light, new Vec3(0, 10, 45));
+
+        objects.add(light);
 
         return objects;
     }

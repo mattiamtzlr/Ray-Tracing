@@ -13,14 +13,14 @@ public class Main {
         Scanner bob = new Scanner(System.in);
 
         // dev boolean => set to false when rendering high quality
-        boolean dev = true;
+        boolean dev = false;
 
         // image properties
         double aspectRatio = (double) 16 / 9;
 
         int imageWidth;
         if (dev) {
-            imageWidth = 400;
+            imageWidth = 500;
         } else {
             System.out.print("Image Width: ");
             imageWidth = bob.nextInt();
@@ -46,7 +46,7 @@ public class Main {
         double aperture = 0;
         Color background = Utility.hexToColor("#bce5f5");
 
-        switch (8) {
+        switch (22) {
             case 1: // --------------------------------------------------------- small Spheres
                 world.add(Scenes.smallSpheres());
                 lookFrom = new Point3(13, 2.2, 4);
@@ -108,15 +108,17 @@ public class Main {
                 break;
 
             case 8: // --------------------------------------------------------- final scene for book 2
-                if (dev) samplesPerPixel = 25;
+                if (dev) {
+                    samplesPerPixel = 15;
+                    imageWidth = 600;
+                }
                 background.set(new Color());
-                imageWidth = 600;
 
                 world.add(Scenes.finalScene());
                 lookFrom = new Point3(700, 160, 900);
                 lookAt = new Point3(150, 140, 0);
                 vFOV = 50;
-                aperture = .2;
+                aperture = .7;
                 break;
 
             case 20: // --------------------------------------------------------- spheres inside box
@@ -139,6 +141,19 @@ public class Main {
                 lookAt = new Point3(0, 3.5, 0);
                 vFOV = 60;
                 break;
+
+            case 22:
+                if (dev) samplesPerPixel = 75;
+                background.set(new Color());
+
+                world.add(Scenes.bokeh());
+                lookFrom = new Point3(0, 1.5, 40);
+                lookAt = new Point3(0, 1.3, 35.8);
+
+                vFOV = 40;
+                aperture = 0.45;
+                break;
+
 
             default: // --------------------------------------------------------- default scene
                 world.add(Scenes.standardScene());
