@@ -37,7 +37,8 @@ Feel free to use these pictures as wallpapers etc.
 Image 1: 500 samples per pixel / about 40 minutes  
 Image 2: 350 samples per pixel / about 40 minutes  
 Image 3: 250 samples per pixel / about 1 hour  
-Image 4: 300 samples per pixel / about 5 hours (!)
+Image 4: 300 samples per pixel / about 5 hours (!)  
+Image 5: 400 samples per pixel / about 2 hours (not the best result)
 
 ### Instance Rotations in `Hittable.java`
 In the original book, Shirley only programs the instance rotation around the y-axis. I wanted to add rotation around the other axes as well, which is why I added the `RotateX` and `RotateZ` classes as well.  
