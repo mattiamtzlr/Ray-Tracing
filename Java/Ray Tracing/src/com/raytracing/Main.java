@@ -13,7 +13,7 @@ public class Main {
         Scanner bob = new Scanner(System.in);
 
         // dev boolean => set to false when rendering high quality
-        boolean dev = false;
+        boolean dev = true;
 
         // image properties
         double aspectRatio = (double) 16 / 9;
@@ -46,7 +46,7 @@ public class Main {
         double aperture = 0;
         Color background = Utility.hexToColor("#bce5f5");
 
-        switch (22) {
+        switch (0) {
             case 1: // --------------------------------------------------------- small Spheres
                 world.add(Scenes.smallSpheres());
                 lookFrom = new Point3(13, 2.2, 4);
@@ -142,7 +142,7 @@ public class Main {
                 vFOV = 60;
                 break;
 
-            case 22:
+            case 22: // --------------------------------------------------------- bokeh
                 if (dev) samplesPerPixel = 75;
                 background.set(new Color());
 
