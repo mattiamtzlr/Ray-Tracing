@@ -495,7 +495,7 @@ public class Scenes {
         Hittable spheresBVH = new BVHNode(spheres, 0, 1);
         objects.add(spheresBVH);
 
-        Material wallMat = new Lambertian(new Color(.2, .2, .2));
+        Material wallMat = new Lambertian(new Color(.1, .1, .1));
         Hittable wallBehindLights = new XYRect(-50, 50, -50, 50, -5, wallMat);
         objects.add(wallBehindLights);
 
