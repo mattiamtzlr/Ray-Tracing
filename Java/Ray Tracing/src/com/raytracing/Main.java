@@ -142,7 +142,7 @@ public class Main {
                 vFOV = 60;
                 break;
 
-            case 22:
+            case 22: // --------------------------------------------------------- bokeh
                 if (dev) samplesPerPixel = 75;
                 background.set(new Color());
 
