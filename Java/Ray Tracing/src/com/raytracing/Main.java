@@ -1,5 +1,8 @@
 package com.raytracing;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Duration;
@@ -7,19 +10,25 @@ import java.time.Instant;
 import java.util.Scanner;
 
 public class Main {
+
+    // dev boolean => set to false when rendering high quality
+    private static final boolean DEV = true;
+
+    // output image format, one of the values of the following enum:
+    private enum FileType {PPM, BMP}
+
+    private static final FileType OUTPUT_FILE_TYPE = FileType.BMP;
+
     public static void main(String[] args) {
         Instant start = Instant.now();
 
         Scanner bob = new Scanner(System.in);
 
-        // dev boolean => set to false when rendering high quality
-        boolean dev = true;
-
         // image properties
         double aspectRatio = (double) 16 / 9;
 
         int imageWidth;
-        if (dev) {
+        if (DEV) {
             imageWidth = 500;
         } else {
             System.out.print("Image Width: ");
@@ -27,7 +36,7 @@ public class Main {
         }
 
         int samplesPerPixel;
-        if (dev) {
+        if (DEV) {
             samplesPerPixel = 10;
         } else {
             System.out.print("Samples per Pixel: ");
@@ -46,7 +55,8 @@ public class Main {
         double aperture = 0;
         Color background = Utility.hexToColor("#bce5f5");
 
-        switch (0) {
+        final int scene = 5;
+        switch (scene) {
             case 1: // --------------------------------------------------------- small Spheres
                 world.add(Scenes.smallSpheres());
                 lookFrom = new Point3(13, 2.2, 4);
@@ -76,7 +86,7 @@ public class Main {
                 break;
 
             case 5: // --------------------------------------------------------- lights
-                if (dev) samplesPerPixel = 100;
+                if (DEV) samplesPerPixel = 75;
                 background.set(new Color());
 
                 world.add(Scenes.lights());
@@ -86,7 +96,7 @@ public class Main {
                 break;
 
             case 6: // --------------------------------------------------------- cornell box
-                if (dev) samplesPerPixel = 30;
+                if (DEV) samplesPerPixel = 30;
                 background.set(new Color());
                 aspectRatio = 1;
 
@@ -97,7 +107,7 @@ public class Main {
                 break;
 
             case 7: // --------------------------------------------------------- cornell box smoke
-                if (dev) samplesPerPixel = 75;
+                if (DEV) samplesPerPixel = 75;
                 background.set(new Color());
                 aspectRatio = 1;
 
@@ -108,7 +118,7 @@ public class Main {
                 break;
 
             case 8: // --------------------------------------------------------- final scene for book 2
-                if (dev) {
+                if (DEV) {
                     samplesPerPixel = 15;
                     imageWidth = 600;
                 }
@@ -122,7 +132,7 @@ public class Main {
                 break;
 
             case 20: // --------------------------------------------------------- spheres inside box
-                if (dev) samplesPerPixel = 100;
+                if (DEV) samplesPerPixel = 100;
                 background.set(new Color());
 
                 world.add(Scenes.insideBox());
@@ -133,7 +143,7 @@ public class Main {
                 break;
 
             case 21: // --------------------------------------------------------- all rotations
-                if (dev) samplesPerPixel = 75;
+                if (DEV) samplesPerPixel = 75;
                 background.set(new Color());
 
                 world.add(Scenes.rotations());
@@ -143,7 +153,7 @@ public class Main {
                 break;
 
             case 22: // --------------------------------------------------------- bokeh
-                if (dev) samplesPerPixel = 75;
+                if (DEV) samplesPerPixel = 75;
                 background.set(new Color());
 
                 world.add(Scenes.bokeh());
@@ -173,35 +183,69 @@ public class Main {
             lookFrom, lookAt, viewUp, vFOV, aspectRatio, aperture, distToFocus, 0, 1
         );
 
-        // render to ppm image format
-        String fileName = "output.ppm";
+        String fileName = switch (OUTPUT_FILE_TYPE) {
+            case PPM -> "output.ppm";
+            case BMP -> "output.bmp";
+        };
 
-        try {
-            FileWriter writer = new FileWriter(fileName);
-            StringBuilder output = new StringBuilder();
-            output.append(String.format("P3\n%d %d\n255\n", imageWidth, imageHeight)); // header of file
+        try (FileWriter writer = new FileWriter(fileName)) {
 
-            for (int j = imageHeight-1; j >= 0 ; j--) {
-                // progress
-                System.out.print("\rScanlines remaining: " + j + " of " + imageHeight + " --- " +
-                    (int) (((double) (imageHeight - j) / imageHeight) * 100) + "% completed");
-                System.out.flush();
+            switch (OUTPUT_FILE_TYPE) {
+                case PPM -> {
+                    StringBuilder output = new StringBuilder();
+                    output.append(String.format("P3\n%d %d\n255\n", imageWidth, imageHeight)); // header of file
 
-                for (int i = 0; i < imageWidth; i++) {
-                    Color pixelColor = new Color(0, 0, 0);
-                    // multiple samples per pixel
-                    for (int s = 0; s < samplesPerPixel; s++) {
-                        double u = (i + Utility.randomDouble()) / (imageWidth - 1);
-                        double v = (j + Utility.randomDouble()) / (imageHeight - 1);
-                        Ray r = cam.getRay(u, v);
-                        pixelColor = Vec3.add(pixelColor, rayColor(r, background, world, maxDepth)).toColor();
+                    for (int j = imageHeight - 1; j >= 0; j--) {
+                        // progress
+                        System.out.print("\rScanlines remaining: " + j + " of " + imageHeight + " --- " +
+                            (int) (((double) (imageHeight - j) / imageHeight) * 100) + "% completed");
+                        System.out.flush();
+
+                        for (int i = 0; i < imageWidth; i++) {
+                            Color pixelColor = new Color(0, 0, 0);
+                            // multiple samples per pixel
+                            for (int s = 0; s < samplesPerPixel; s++) {
+                                double u = (i + Utility.randomDouble()) / (imageWidth - 1);
+                                double v = (j + Utility.randomDouble()) / (imageHeight - 1);
+                                Ray r = cam.getRay(u, v);
+                                pixelColor = Vec3.add(pixelColor, rayColor(r, background, world, maxDepth)).toColor();
+                            }
+                            output.append(writeColor(pixelColor, samplesPerPixel));
+                        }
                     }
-                    output.append(writeColor(pixelColor, samplesPerPixel));
+
+                    writer.write(output.toString());
                 }
-            }           
-            
-            writer.write(output.toString());
-            writer.close();
+
+                case BMP -> {
+                    BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
+
+                    for (int y = imageHeight - 1; y >= 0; y--) {
+                        // progress
+                        System.out.print("\rScanlines remaining: " + y + " of " + imageHeight + " --- " +
+                            (int) (((double) (imageHeight - y) / imageHeight) * 100) + "% completed");
+                        System.out.flush();
+
+                        for (int x = 0; x < imageWidth; x++) {
+                            Color pixelColor = new Color(0, 0, 0);
+
+                            // multiple samples per pixel
+                            for (int s = 0; s < samplesPerPixel; s++) {
+                                double u = (x + Utility.randomDouble()) / (imageWidth - 1);
+                                double v = (y + Utility.randomDouble()) / (imageHeight - 1);
+                                Ray r = cam.getRay(u, v);
+                                pixelColor = Vec3.add(pixelColor, rayColor(r, background, world, maxDepth)).toColor();
+                            }
+
+                            image.setRGB(x, imageHeight - (y + 1), writeColorBMP(pixelColor,
+                                samplesPerPixel));
+                        }
+                    }
+
+                    File output = new File(fileName);
+                    ImageIO.write(image, "bmp", output);
+                }
+            }
 
             Instant finish = Instant.now();
             double timeElapsed = Duration.between(start, finish).toMillis();
@@ -228,7 +272,6 @@ public class Main {
 
         } catch (IOException e) {
             System.out.printf("Error while writing to '%s'.\n", fileName);
-            e.printStackTrace();
         }
 
     }
@@ -277,9 +320,29 @@ public class Main {
 
         // return the translated (0 to 256) value of each component
         return String.format("%d %d %d\n",
-                (int) (256 * Utility.clamp(r, 0, 0.999)),
-                (int) (256 * Utility.clamp(g, 0, 0.999)),
-                (int) (256 * Utility.clamp(b, 0, 0.999))
+            (int) (256 * Utility.clamp(r, 0, 0.999)),
+            (int) (256 * Utility.clamp(g, 0, 0.999)),
+            (int) (256 * Utility.clamp(b, 0, 0.999))
         );
+    }
+
+    public static int writeColorBMP(Color pixelColor, int samplesPerPixel) {
+        double r = pixelColor.x();
+        double g = pixelColor.y();
+        double b = pixelColor.z();
+
+        // divide the color by the number of samples and gamma correct for gamma = 2
+        // -> raising color to the power 1/gamma -> 1/2 -> sqrt
+
+        double scale = (double) 1 / samplesPerPixel;
+        r = Math.sqrt(scale * r);
+        g = Math.sqrt(scale * g);
+        b = Math.sqrt(scale * b);
+
+        int rgb = (int) (256 * Utility.clamp(r, 0, 0.999));
+        rgb = (rgb << 8) | (int) (256 * Utility.clamp(g, 0, 0.999));
+        rgb = (rgb << 8) | (int) (256 * Utility.clamp(b, 0, 0.999));
+
+        return rgb;
     }
 }
