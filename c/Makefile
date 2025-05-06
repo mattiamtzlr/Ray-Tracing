@@ -1,6 +1,7 @@
-MAKEFLAGS += -s
+# MAKEFLAGS += -s
 
 EXEC_NAME := ray_tracing
+OUTPUT_PPM := output.ppm
 
 SRC_DIR := src
 OUT_DIR := out
@@ -13,6 +14,13 @@ CC = gcc
 CFLAGS = -std=c2x -O2 -MMD -MP
 LDFLAGS = -lm
 
+all: $(EXEC_NAME)
+
+run: $(EXEC_NAME)
+	@echo
+	./$(EXEC_NAME)
+	@echo
+	xdg-open ./$(OUTPUT_PPM)
 
 $(EXEC_NAME): $(OBJ)
 	$(CC) $(OBJ) -o $@ $(LDFLAGS)
@@ -28,4 +36,4 @@ $(OUT_DIR)/%.o: $(SRC_DIR)/%.c
 clean:
 	$(RM) -r $(OUT_DIR)/* $(EXEC_NAME)
 
-.PHONY: clean $(EXEC_NAME)
+.PHONY: clean $(EXEC_NAME) run all
