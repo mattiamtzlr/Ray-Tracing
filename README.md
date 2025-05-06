@@ -5,12 +5,14 @@ Simple ray tracer (pathtracer) following [Peter Shirley's "Ray Tracing in One We
 _06.05.2025_: I decided to rewrite this entire thing in C, because I'm learning it for uni at the moment, and I guess, why not? ツ  
 Maybe I'll actually do it, maybe not, stay tuned.  
 
-## Java Version
-Shirley originally coded his version in C++ which I don't know at all, so I used Java for my first version. I did most of the transpiling on my own but also used _ChatGPT_ by _OpenAI_ to help sometimes.
+## Java Version (Legacy)
+_2023, sometime_: Shirley originally coded his version in C++ which I don't know at all, so I used Java for my first version. I did most of the transpiling on my own but also used _ChatGPT_ by _OpenAI_ to help sometimes.
 
+### Python Version (Legacy)
 _I originally coded everything in Python, but that was too slow, which is why I ported everything to Java after chapter 8.4.  
 The python script requires `tqdm` to be installed. Install it using `pip install tqdm`._
 
+### Dev-Log
 I saved some images of the progress of the ray tracer in the `/images` directory. The name of the image corresponds to the chapter, after which I generated that image.  
 
 At the time of writing this (18.05.2023), I have finished the first book in the series (see `/images/chapter_1_13.png` for the result) and will be continuing with at least the second book and maybe even with the third one.  
@@ -19,7 +21,7 @@ Sadly the ray tracer is again really slow when rendering with high-quality setti
 __Update:__ As of today (15.07.2023), I have finished the second book in the series (see `/images/chapter_2_10.png` for the result). I will probably not continue with the third book as it involves a lot of high-level math, that I don't understand.
 However I will try to implement more features, first of all the ability to render triangles, which will enable me to render any mesh I want.
 
-## Notes / Remarks
+## General Notes / Remarks
 Some notes and remarks to different chapters, changes or concepts.
 
 ### Coordinate System
