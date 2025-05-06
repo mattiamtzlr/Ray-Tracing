@@ -1,7 +1,12 @@
-# Ray Tracing in Java
+# Ray Tracing
+Simple ray tracer (pathtracer) following [Peter Shirley's "Ray Tracing in One Weekend" Series](https://raytracing.github.io/).  
 
-Simple ray tracer (pathtracer) coded in Java following [Peter Shirley's "Ray Tracing in One Weekend" Series](https://raytracing.github.io/).  
-Shirley originally coded his version in C++ which I don't know at all, so I used Java for my version. I did most of the transpiling on my own but also used _ChatGPT_ by _OpenAI_ to help sometimes.
+## C Version
+_06.05.2025_: I decided to rewrite this entire thing in C, because I'm learning it for uni at the moment, and I guess, why not? ツ  
+Maybe I'll actually do it, maybe not, stay tuned.  
+
+## Java Version
+Shirley originally coded his version in C++ which I don't know at all, so I used Java for my first version. I did most of the transpiling on my own but also used _ChatGPT_ by _OpenAI_ to help sometimes.
 
 _I originally coded everything in Python, but that was too slow, which is why I ported everything to Java after chapter 8.4.  
 The python script requires `tqdm` to be installed. Install it using `pip install tqdm`._
