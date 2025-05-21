@@ -1,4 +1,4 @@
-# MAKEFLAGS += -s
+MAKEFLAGS += -s
 
 EXEC_NAME := ray_tracing
 OUTPUT_PPM := output.ppm
@@ -20,7 +20,6 @@ run: $(EXEC_NAME)
 	@echo
 	./$(EXEC_NAME)
 	@echo
-	xdg-open ./$(OUTPUT_PPM)
 
 $(EXEC_NAME): $(OBJ)
 	$(CC) $(OBJ) -o $@ $(LDFLAGS)
